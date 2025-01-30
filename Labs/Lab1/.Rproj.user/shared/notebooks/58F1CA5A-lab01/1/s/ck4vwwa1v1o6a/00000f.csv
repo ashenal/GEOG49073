@@ -1,0 +1,3 @@
+"0","d.counties %>% "
+"0","  ggplot(., aes(x = as.factor(STATEFP10), y = ALAND10)) +"
+"0","  geom_boxplot(aes(fill = STATEFP10))"

@@ -1,0 +1,4 @@
+"0","d.counties %>% "
+"0","  as_tibble() %>% dplyr::select(-geometry) %>% # this line converts the data because of wonky geometry"
+"0","  group_by(STATEFP10) %>% "
+"0","  summarise(stateLandArea = sum(ALAND10))"

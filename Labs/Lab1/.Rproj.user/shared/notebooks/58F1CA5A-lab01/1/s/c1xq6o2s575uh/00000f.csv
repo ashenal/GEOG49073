@@ -1,0 +1,4 @@
+"0","d.counties %>% "
+"0","  ggplot(., aes(x = ALAND10)) +"
+"0","  geom_histogram(aes(fill = STATEFP10)) +"
+"0","  labs(title = ""not the most useful plot, but you get the idea"")"

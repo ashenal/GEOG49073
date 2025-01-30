@@ -1,0 +1,1 @@
+"0","del.counties <- d.counties %>% dplyr::filter(STATEFP10 == 10)"

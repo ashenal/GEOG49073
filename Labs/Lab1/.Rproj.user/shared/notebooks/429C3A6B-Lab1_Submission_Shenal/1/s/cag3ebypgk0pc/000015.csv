@@ -1,0 +1,4 @@
+"0","#%>% "
+"0","  summarize(., PcntLand = (ALAND10 / TotArea)*100)"
+"2","Error: object '.' not found
+"

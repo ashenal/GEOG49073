@@ -1,0 +1,14 @@
+"0","d.counties %>% dplyr::select(GEOID10, ALAND10) %>% head()"
+"1","Simple feature collection with 6 features and 2 fields"
+"1","
+"
+"1","Geometry type: MULTIPOLYGON
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -79.38264 ymin: 37.69574 xmax: -76.95493 ymax: 40.72605"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"
