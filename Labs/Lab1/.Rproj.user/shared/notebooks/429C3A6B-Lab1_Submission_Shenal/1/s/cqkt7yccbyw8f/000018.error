@@ -1,0 +1,1 @@
+{"frames":[{"func":"d.stations %>% nchar(STATION_NA)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0},{"func":"nchar(., STATION_NA)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Error: object 'STATION_NA' not found\n"}

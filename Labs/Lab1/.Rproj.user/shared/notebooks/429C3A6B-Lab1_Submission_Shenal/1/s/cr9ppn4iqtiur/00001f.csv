@@ -1,0 +1,19 @@
+"0",""
+"0","d.counties %>% "
+"0","  mutate(., TotArea = ALAND10 + AWATER10) %>% "
+"0","  mutate(., PropWater = (AWATER10 /TotArea)*100) %>% #Proportion water as a %"
+"0","  group_by(STATEFP10) %>%"
+"0","  slice_max(PropWater)"
+"1","Simple feature collection with 7 features and 22 fields"
+"1","
+"
+"1","Geometry type: MULTIPOLYGON
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -78.03546 ymin: 37.09685 xmax: -75.13846 ymax: 43.70813"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

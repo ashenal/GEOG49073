@@ -43,13 +43,14 @@ d.counties <- d.counties %>% sf::st_make_valid()
 
 1.1 For each county, calculate its land area as percentage of the total area (land + water) for that state.
 
-```{r}
+```{r echo=TRUE, message=TRUE}
 
 d.counties %>% 
-  mutate(., TotArea = ALAND10 + AWATER10)
-#%>% 
-  #summarize(., PcntLand = (ALAND10 / TotArea)*100)
-
+  mutate(., CntyTotArea = ALAND10 + AWATER10) %>%
+  group_by(STATEFP10) %>%
+  mutate(., StTotArea = sum(CntyTotArea)) %>% 
+  mutate(., PcntLandArea = (ALAND10 / StTotArea)*100) %>% 
+  arrange(STATEFP10)
 
 ```
 
@@ -58,17 +59,28 @@ d.counties %>%
 
 ```{r}
 
+d.counties %>% 
+  mutate(., TotArea = ALAND10 + AWATER10) %>% 
+  mutate(., PropWater = (AWATER10 /TotArea)*100) %>% #Proportion water as a %
+  group_by(STATEFP10) %>%
+  slice_max(PropWater)
+
 ```
 
 1.3 Count the number of counties in each state
 
 ```{r}
+d.counties %>% 
+  count(STATEFP10) #Counts the occurrences of each STATEFP10 in column "n"
 
 ```
 
 1.4 Which station has the shortest name (STATION_NA) in the study area?
 
 ```{r}
+d.stations %>% 
+  nchar(STATION_NA)
+  #slice_min(STATION_NA)
 
 ```
 
@@ -78,18 +90,46 @@ d.counties %>%
 2.1 Make a scatterplot showing the relationship between land area and water area for each county. Color each point using the state variable
 
 ```{r}
+d.counties %>% 
+  ggplot(., aes(x=ALAND10, y=AWATER10))+
+  geom_point(aes(color = STATEFP10))+
+  theme_bw() +
+  labs(title = 'Land area compared to water area',
+       subtitle = 'County scale',
+       x = "Area of Land",
+       y = 'Area of Water',
+       color = 'State FIPS')
 
 ```
 
 2.2 Make a histogram of drainage area (Drainage_A) for all monitoring stations
 
 ```{r}
+d.stations %>% 
+  ggplot(., aes(x=Drainage_A))+
+  geom_histogram()+
+  theme_bw() +
+  labs(title = 'Drainage area of water monitoring stations',
+       x = "Drainage Area",
+       y = 'Number of stations')
 
 ```
 
 2.3 Make a similar histogram of drainage area (Drainage_A) for all monitoring stations. This time, shade/color each portion of the histogram's bar(s) using the state variable
 
 ```{r}
+
+
+
+
+
+d.stations %>% 
+  ggplot(., aes(x=Drainage_A))+
+  geom_histogram(aes(fill = STATEFP10)) +
+  theme_bw() +
+  labs(title = 'Drainage area of water monitoring stations',
+       x = "Drainage Area",
+       y = 'Number of stations')
 
 ```
 
@@ -110,6 +150,29 @@ Test it with the following vectors
 
 ```{r}
 
+#Function
+Task3 <- function(Vectors){
+  if(is.numeric(Vectors) == TRUE)
+  {return(list(
+    Mean = mean(Vectors),
+    Median = median(Vectors), 
+    Maximum = max(Vectors), 
+    Minimum = min(Vectors),
+    orted = sort.default(Vectors)))}
+  else{
+    print("Error: Not numeric values")
+    }}
+
+#List of the vectors to test the function on
+Vectors <-list(
+  c(1, 0, -1),
+  c(10, 100, 1000),
+  c(.1, .001, 1e8),
+  c("a", "b", "c"))
+
+#Apply the function across the list
+Vectors %>% purrr::map(., Task3)
+
 ```
 
 ### Task 4: (slightly) more complex spatial analysis. 
@@ -118,6 +181,9 @@ Test it with the following vectors
 4.1 Calculate the number of monitoring stations in each state
 
 ```{r}
+
+
+
 
 ```
 

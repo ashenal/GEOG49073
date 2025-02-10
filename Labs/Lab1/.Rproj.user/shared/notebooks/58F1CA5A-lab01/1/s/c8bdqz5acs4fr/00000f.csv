@@ -1,2 +1,0 @@
-"0","del.stations <- sf::st_intersection(d.stations, del.counties)"
-"2","Warning: attribute variables are assumed to be spatially constant throughout all geometries"
