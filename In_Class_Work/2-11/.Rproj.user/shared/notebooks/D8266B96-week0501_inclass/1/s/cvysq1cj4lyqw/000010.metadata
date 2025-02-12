@@ -1,0 +1,1 @@
+{"height":432.6328800988875,"width":700.0,"dpi":-1.0,"size_behavior":0,"conditions":[[0,"\u001B[38;5;252m\u001B[32m[plot mode]\u001B[38;5;252m fit legend/component: Some legend items or map compoments do not fit well, and are therefore\nrescaled.\n\u001B[36mℹ\u001B[38;5;252m Set the tmap option `component.autoscale = FALSE` to disable rescaling.\u001B[39m"]]}

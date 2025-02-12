@@ -1,0 +1,21 @@
+"0",""
+"0","d.counties %>% "
+"0","  mutate(., CntyTotArea = ALAND10 + AWATER10) %>% #Find County total area"
+"0","  group_by(STATEFP10) %>% #Group by state to get statewide calculations"
+"0","  mutate(., StTotArea = sum(CntyTotArea)) %>% #Find state total area as a sum of all county areas in the state"
+"0","  mutate(., PcntLandArea = (ALAND10 / StTotArea)*100) %>% #Calculate land as a percentage of total area for the state"
+"0","  arrange(STATEFP10) %>% #Arrange so that all the counties in each state are together for easy viewing"
+"0","  select(STATEFP10, COUNTYFP10, NAME10, CntyTotArea, StTotArea, PcntLandArea) #Select only necessary columns to view"
+"1","Simple feature collection with 207 features and 6 fields"
+"1","
+"
+"1","Geometry type: MULTIPOLYGON
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -81.01449 ymin: 36.55035 xmax: -74.16468 ymax: 44.09697"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

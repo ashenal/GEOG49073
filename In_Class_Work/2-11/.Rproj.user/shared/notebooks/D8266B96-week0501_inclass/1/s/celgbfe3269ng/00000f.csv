@@ -1,0 +1,1 @@
+"0","study.area %>% tm_shape(.) + tm_polygons(fill = ""NAME"")"

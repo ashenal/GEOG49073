@@ -1,0 +1,1 @@
+"0","counties_areas <- oh_counties %>% sf::st_area()"

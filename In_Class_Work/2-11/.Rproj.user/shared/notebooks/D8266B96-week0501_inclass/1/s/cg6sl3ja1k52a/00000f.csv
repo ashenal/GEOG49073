@@ -1,0 +1,2 @@
+"0","tm_shape(study.area_p) + tm_polygons(fill = ""NAME"") + "
+"0","  tm_shape(study.streams) + tm_lines(col = ""assessmentunitname"") # this colors the lines based on a variable in the dataset"

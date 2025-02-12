@@ -1,0 +1,4 @@
+"0","buffs <- sf::st_buffer(study.streams, dist = 1000)"
+"0",""
+"0","tm_shape(buffs) + tm_polygons(fill = ""assessmentunitname"")"
+"0",""

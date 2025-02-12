@@ -1,0 +1,5 @@
+"0","oh_parks_p <-  sf::st_transform(oh_parks, 6346) "
+"0",""
+"0","oh_parks_p_studyarea <- sf::st_intersection(oh_parks_p, study.area_p)"
+"2","Warning: attribute variables are assumed to be spatially constant throughout all geometries"
+"0","tm_shape(oh_parks_p_studyarea) + tm_polygons(fill = ""FEATTYPE"")"

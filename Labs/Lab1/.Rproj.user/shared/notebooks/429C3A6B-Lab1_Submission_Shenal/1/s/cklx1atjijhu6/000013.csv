@@ -1,0 +1,15 @@
+"0",""
+"0","d.stations %>% "
+"0","  ggplot(., aes(x=Drainage_A, fill = STATEFP10))+"
+"0","  geom_histogram(bins = 30) +"
+"0","  theme_bw() +"
+"0","  labs(title = 'Drainage area of water monitoring stations',"
+"0","       x = ""Drainage Area"","
+"0","       y = 'Number of Stations')"
+"1","[1m[33mError[39m in `geom_histogram()`:[22m
+[38;5;252m[33m![38;5;252m Problem while computing aesthetics.
+[36mℹ[38;5;252m Error occurred in the 1st layer.[39m
+[1mCaused by error:[22m
+[33m![39m object 'STATEFP10' not found
+[90mRun `]8;;x-r-run:rlang::last_trace()rlang::last_trace()]8;;` to see where the error occurred.[39m
+"

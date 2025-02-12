@@ -1,0 +1,4 @@
+"0","study.streams <- sf::st_intersection(streams.303d, study.area)"
+"2","Error in geos_op2_geom(""intersection"", x, y, ...) : 
+  st_crs(x) == st_crs(y) is not TRUE
+"

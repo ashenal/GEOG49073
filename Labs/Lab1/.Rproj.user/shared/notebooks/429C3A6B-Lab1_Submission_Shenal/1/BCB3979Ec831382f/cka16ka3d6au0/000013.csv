@@ -1,0 +1,9 @@
+"0",""
+"0","Stations_Joined <- st_join(d.stations, d.counties, join = st_intersects)"
+"0",""
+"0","Stations_Joined %>% "
+"0","  group_by(STATEFP10) %>% "
+"0","  mutate(., AvgDrainArea = mean(Drainage_A)) %>% "
+"0","  sort_by(STATEFP10)"
+"2","Error: object 'STATEFP10' not found
+"

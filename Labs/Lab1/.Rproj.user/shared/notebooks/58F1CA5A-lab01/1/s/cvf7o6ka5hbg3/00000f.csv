@@ -1,0 +1,9 @@
+"0",""
+"0","## note the "".."" as opposed to ""."" <- need to go back one additional level from where this file is"
+"0","p.counties <- ""../data/CBW/County_Boundaries.shp"""
+"0","p.stations <- ""../data/CBW/Non-Tidal_Water_Quality_Monitoring_Stations_in_the_Chesapeake_Bay.shp"""
+"0",""
+"0",""
+"0","d.counties <- sf::read_sf(p.counties)"
+"2","Error: Cannot open ""../data/CBW/County_Boundaries.shp""; The file doesn't seem to exist.
+"

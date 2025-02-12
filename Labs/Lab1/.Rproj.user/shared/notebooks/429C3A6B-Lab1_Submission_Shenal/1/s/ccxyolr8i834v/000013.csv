@@ -1,0 +1,21 @@
+"0",""
+"0","Stations_Joined <- st_join(d.stations, d.counties, join = st_intersects) #Join data again"
+"0",""
+"0","Stations_Joined %>% "
+"0","  group_by(STATEFP10) %>% #Group to do calculations across each state"
+"0","  mutate(., AvgDrainArea = mean(Drainage_A)) %>% #Average drainage area calculation "
+"0","  arrange(desc(AvgDrainArea)) %>% #Arrange by descending states with biggest drainage areas are on top"
+"0","  head() #Get first few results to show greatest values"
+"1","Simple feature collection with 6 features and 32 fields"
+"1","
+"
+"1","Geometry type: POINT
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -78.1089 ymin: 40.95815 xmax: -75.88075 ymax: 41.98473"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

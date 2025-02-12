@@ -1,0 +1,8 @@
+"0","d.stations %>% "
+"0","  ggplot(., aes(x=Drainage_A))+"
+"0","  geom_histogram(bins = 30, color = 'white', fill = 'blue')+"
+"0","  theme_bw() +"
+"0","  labs(title = 'Drainage area of water monitoring stations',"
+"0","       x = ""Drainage Area"","
+"0","       y = 'Number of Stations')"
+"0",""

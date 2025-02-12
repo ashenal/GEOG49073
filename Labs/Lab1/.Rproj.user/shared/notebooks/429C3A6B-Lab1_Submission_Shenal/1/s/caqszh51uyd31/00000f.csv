@@ -1,0 +1,18 @@
+"0",""
+"0","d.stations %>% "
+"0","  mutate(., Name_Length = nchar(STATION_NA)) %>% #Create new column that counts number of characters in each name"
+"0","  slice_min(Name_Length) %>% #Find the station with minimum name length (There's two with same length of 26)"
+"0","  select(STATION_NA, Name_Length) #Select necessary columns for viewing"
+"1","Simple feature collection with 2 features and 2 fields"
+"1","
+"
+"1","Geometry type: POINT
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -79.17917 ymin: 37.63376 xmax: -76.69635 ymax: 39.36667"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

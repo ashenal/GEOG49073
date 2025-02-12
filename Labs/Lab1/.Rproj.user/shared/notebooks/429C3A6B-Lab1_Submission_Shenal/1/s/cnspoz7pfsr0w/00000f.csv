@@ -1,0 +1,17 @@
+"0",""
+"0","Stations_Joined <- st_join(d.stations, d.counties, join = st_intersects) #Spatially join data to get states column"
+"0",""
+"0","Stations_Joined %>% count(STATEFP10) #Count the occurrences of each state"
+"1","Simple feature collection with 7 features and 2 fields"
+"1","
+"
+"1","Geometry type: MULTIPOINT
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -79.897 ymin: 37.22516 xmax: -75.40611 ymax: 42.37779"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

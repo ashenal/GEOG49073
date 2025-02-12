@@ -1,0 +1,1 @@
+"0","sf::st_distance(study.streams, oh_parks_p_studyarea) %>% as_tibble()"

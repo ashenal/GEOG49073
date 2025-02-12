@@ -1,0 +1,6 @@
+"0","# No they are not equivalent. The first one would select the points of stations that intersect with the counties in Delaware. Alternatively, the second would select the polygons of Delaware counties that intersect with any stations. "
+"0",""
+"0","# Also, the first would leave with the attributes from the stations with county information added on. While the second would leave you with the attributes of the selected Delaware counties and the station information joined to that. Both impact what data you're essentially dropping. One example of this being important is if there were more than one station in a county  and you used the second statement. Your result would incorrectly only show one station in the county."
+"0",""
+"0","# The two statements will always be different even with other vector data as the order changes what geometry is left. However, if the data has one-to-one matches spatially then the attribute data would not change from the order of variables. "
+"0",""

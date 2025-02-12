@@ -1,0 +1,10 @@
+"0",""
+"0","tm_shape(study.area_p) + tm_polygons(fill = ""NAME"") + "
+"0","  tm_shape(oh_parks_p_studyarea) + tm_polygons(fill = ""FEATTYPE"", palette = ""brewer.dark2"") +"
+"0","  tm_shape(study.streams) + tm_lines(col = ""red"")"
+"2","
+"
+"2","[36m──[39m [1mtmap v3 code detected[22m [36m───────────────────────────────────────────────────────────────────────────────────────[39m
+"
+"2","[38;5;252m[32m[v3->v4][38;5;252m `tm_tm_polygons()`: migrate the argument(s) related to the scale of the visual variable `fill` namely
+'palette' (rename to 'values') to fill.scale = tm_scale(<HERE>).[39m"
