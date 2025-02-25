@@ -1,0 +1,2 @@
+"0","study.streams <- sf::st_intersection(oh_streams_p, study.area_p)"
+"2","Warning: attribute variables are assumed to be spatially constant throughout all geometries"

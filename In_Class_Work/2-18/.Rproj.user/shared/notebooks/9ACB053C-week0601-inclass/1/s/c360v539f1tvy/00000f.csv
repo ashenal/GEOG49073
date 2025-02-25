@@ -1,0 +1,3 @@
+"0","tmap_mode(""plot"")"
+"2","[38;5;252m[36mℹ[38;5;252m tmap mode set to [34m""plot""[38;5;252m.[39m"
+"0","tm_shape(ca) + tm_polygons() + tm_shape(ks) + tm_dots(fill='navyblue', size = .2)"

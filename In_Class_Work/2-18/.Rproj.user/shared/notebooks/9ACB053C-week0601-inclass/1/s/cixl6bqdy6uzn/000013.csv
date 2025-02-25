@@ -1,0 +1,6 @@
+"0","ca.path <- ""./data/ca_points/california.gpkg"""
+"0","ks.path <- ""./data/ca_points/ca_k_pbe.gpkg"""
+"0",""
+"0","ca <- sf::read_sf(ca.path)"
+"0","ks <- sf::read_sf(ks.path)"
+"0",""

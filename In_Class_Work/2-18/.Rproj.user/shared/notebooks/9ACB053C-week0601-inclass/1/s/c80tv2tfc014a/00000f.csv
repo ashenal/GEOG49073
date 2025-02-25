@@ -1,0 +1,3 @@
+"0","idw_result <- gstat::idw(ks$pbe1415~1, ks, grd_idw)"
+"1","[inverse distance weighted interpolation]
+"

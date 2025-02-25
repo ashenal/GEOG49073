@@ -1,0 +1,7 @@
+"0",""
+"0","t.wonkyNames <- tibble(nombre = c(""Dewey"", ""Louis"", ""Huey""),"
+"0","                       x = rep(999),"
+"0","                       favoriteFood = c(""banana"", ""apple"", ""carrot""))"
+"0",""
+"0","t.joined2 <- left_join(t.names, t.wonkyNames, by = c(""name"" = ""nombre""))"
+"0","t.joined2"

@@ -1,0 +1,8 @@
+"0","# what counties do I want?"
+"0",""
+"0","# Make a simple vector"
+"0","mycounties <- c(""Portage"", ""Summit"", ""Lake"", ""Cuyahoga"", ""Geauga"")"
+"0",""
+"0","# then do the filter. Note the %in% notation. How do you think this works???"
+"0","study.area <- oh_counties %>% dplyr::filter(., NAME %in% mycounties)"
+"0",""

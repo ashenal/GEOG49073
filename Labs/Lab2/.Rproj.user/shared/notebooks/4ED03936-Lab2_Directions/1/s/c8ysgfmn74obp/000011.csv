@@ -1,0 +1,7 @@
+"0",""
+"0","# Very heavily skewed, so just for the sake of visualization, "
+"0","# let's subset the data (dramatically)"
+"0","bmps %>% "
+"0","  dplyr::filter(., AmountCredited > 1 & AmountCredited < 100) %>% "
+"0","  ggplot(., aes(x = StateAbbreviation, y = AmountCredited)) +"
+"0","  geom_boxplot(aes(fill = StateAbbreviation))"

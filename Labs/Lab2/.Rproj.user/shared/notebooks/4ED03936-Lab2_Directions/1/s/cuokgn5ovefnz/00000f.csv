@@ -1,0 +1,6 @@
+"0",""
+"0","# Let's calculate the total cost by BMP and then plot it"
+"0","bmps %>% group_by(BMPType) %>% summarise(totalCost = sum(Cost)) %>%"
+"0","  ggplot(., aes(x = BMPType, y = totalCost)) +"
+"0","  geom_bar(stat = ""identity"") +"
+"0","  theme_minimal()"

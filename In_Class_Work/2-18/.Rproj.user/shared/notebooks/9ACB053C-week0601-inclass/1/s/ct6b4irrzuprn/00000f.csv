@@ -1,0 +1,4 @@
+"0","kde <- ks %>%"
+"0","  SpatialKDE::kde(band_width = band_width, kernel = ""quartic"", grid = grid_ca)"
+"2","Using centroids instead of provided `grid` geometries to calculate KDE estimates.
+"

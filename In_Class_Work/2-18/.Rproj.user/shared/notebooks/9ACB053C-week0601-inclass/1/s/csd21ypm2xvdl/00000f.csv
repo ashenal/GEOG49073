@@ -1,0 +1,2 @@
+"0","raster_ks <- ks %>%"
+"0","  create_raster(cell_size = cell_size, side_offset = band_width)"

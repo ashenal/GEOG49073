@@ -1,0 +1,2 @@
+"0","grid_ca <- ca %>%"
+"0","  create_grid_rectangular(cell_size = cell_size, side_offset = band_width)"

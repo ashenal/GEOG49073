@@ -1,0 +1,7 @@
+"0","tmap_mode(""view"")"
+"2","[38;5;252m[36mℹ[38;5;252m tmap mode set to [34m""view""[38;5;252m.[39m"
+"0","tm_shape(ca) + tm_polygons() + tm_shape(ks) + tm_dots(fill='navyblue', size = .4)"
+"2","Registered S3 method overwritten by 'jsonlite':
+  method     from   
+  print.json jsonify
+"

@@ -1,0 +1,299 @@
+---
+title: "wk05-01_inclass"
+author: "Patrick Bitterman"
+date: "2025-02-09"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# Week 05.01 in-class
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Intro
+
+Today's exercise is a bit different. This notebook will demonstrate some new techniques while also allowing you to become more comfortable with the R Markdown (Rmd) format. You can click the little green arrow for each of the code blocks to run everything IN THAT BLOCK.
+
+
+First, let's add the packages we'll need. NOTE, you may also need to install some of these packages onto your computer BEFORE you're able to use them. Do you remember the command to install a package?
+
+```{r loadstuff}
+library(tidyverse)
+library(sf)
+library(terra)
+library(tidyterra)
+library(tmap)
+
+```
+
+## A digression into geopackages
+
+Let's load some data. Note, this is a different file format than you're (probably) used to. Check out https://www.geopackage.org if you want to learn more (and you should).
+
+You may also notice the path is structured slightly differently that before. When in standard R script (for example, myscript.R), the "." notation refers to the location of the RStudio project file. HOWEVER, when using Rmd files, the starting location is where the .Rmd file is. Therefore, we need to edit our path a bit. ".." means "go up a level" (in this case, FROM the src directory and TO the root of the project) THEN find the `data` directory, then the `ohio` directory, then find the file.
+
+```{r readstreams, echo=FALSE}
+oh_streams <- read_sf("./ohio/ohio_rivers.gpkg")
+```
+
+
+Anyways, now we have some stream data. I like to always check the projection information. What's the projection?
+
+```{r}
+oh_streams %>% sf::st_crs()
+```
+
+And then we can map it. I'm introducing a new package `tmap` today. This package does thematic mapping (hence, tmap) with various spatial data. The syntax uses the `+` notation similar to (but not exactly like) `ggplot`. You'll notice it's MUCH faster than the standard `plot()` command.
+
+```{r}
+tm_shape(oh_streams) + tm_lines()
+```
+
+## Let's grab some more data
+
+```{r}
+oh_counties <- read_sf("./ohio/oh_counties.gpkg")
+oh_counties %>% glimpse()
+```
+
+So now we have all counties in Ohio. Cool. Let's do some simple calculations with the data
+
+```{r}
+counties_areas <- oh_counties %>% sf::st_area()
+```
+
+If you wanted to, how would you add the areas back to the sf data.frame?
+
+Let's subset our data so that we're not working with ALL of Ohio. There are lots of ways to do this. How would we get ONLY Portage county?
+
+```{r}
+portage <- oh_counties %>% dplyr::filter(., NAME == "Portage")
+```
+
+Check it/plot it
+
+```{r}
+portage %>% tm_shape(.) + tm_polygons()
+```
+
+Yep, it's a rectangle.
+
+
+Let's make a slightly larger study area to include Summit County as well. How could we do that? Let's just use an "or" within the filter command.
+
+```{r}
+port.summit <- oh_counties %>% dplyr::filter(., NAME == "Portage" | NAME == "Summit")
+```
+
+As you can imagines, that can get a bit clunky if we need to string together a bunch of "or" commands. So let's try a different notation that's also a bit more reuseable.
+
+```{r}
+# what counties do I want?
+
+# Make a simple vector
+mycounties <- c("Portage", "Summit", "Lake", "Cuyahoga", "Geauga")
+
+# then do the filter. Note the %in% notation. How do you think this works???
+study.area <- oh_counties %>% dplyr::filter(., NAME %in% mycounties)
+
+```
+
+Plot it to check, add a fill based on a variable. It very handily adds a simple legend too!
+```{r}
+study.area %>% tm_shape(.) + tm_polygons(fill = "NAME")
+```
+
+The streams dataset includes a variable for whether that stream segment is classified as impaired and on the "303d" list, which is list of impaired streams as defined by section 303d of the Clean Water Act. Let's filter the line file such that we only have those streams
+
+```{r}
+streams.303d <- oh_streams %>% dplyr::filter(., on303dlist == "Y") 
+# It would make more sense if they used a logical (T/F) rather than Y/N, but I didn't create the data
+```
+
+
+Next, let's find only those 303d streams that are in our study area? What's the spatial operation again? Yes, an intersection
+
+```{r eval=FALSE, message=TRUE, warning=TRUE, include=FALSE}
+study.streams <- sf::st_intersection(streams.303d, study.area)
+```
+
+Oops, that didn't work. What was the problem?
+
+
+Let's try again, this time dealing with the spatial reference/coordinate systems properly. 
+
+```{r}
+st_crs(study.area)
+st_crs(oh_streams)
+
+# they're not the same, so we need to reproject them into a common CRS...
+
+
+# The 6346 is an EPSG code (see: https://epsg.io) for a UTM 16N CRS
+
+# let's reproject this one first
+# ... or in `sf` parlance, "transform" it
+study.area_p <- sf::st_transform(study.area, 6346) 
+
+# we COULD (and maybe should) use a similar command to reproject the streams file too. 
+#But let's do something a bit different/crazy just to show what's possible
+
+
+# Before you run this next line, break down what it does FIRST. It's definitely non-traditional
+
+study.area_p %>% st_crs() %>% sf::st_transform(study.area, .) -> oh_streams_p
+
+# Now, while the above line technically works, it's not very readable, 
+# and an example of "just because you can, doesn't mean you should"
+
+# something like this is probably better
+
+oh_streams_p <- study.area_p %>% st_crs() %>% sf::st_transform(oh_streams, .)
+
+
+```
+
+
+Let's compare how the CRS impacts calcultions
+
+```{r}
+
+# unprojected areas
+areas.unproj <- study.area %>% sf::st_area()
+
+# projected areas
+areas.proj <- study.area_p %>% sf::st_area()
+
+# note that they're both in meters
+# test for equality
+areas.unproj == areas.proj
+
+# test of differences
+areas.unproj - areas.proj
+
+# differences as a percent of original
+100 * (areas.unproj - areas.proj) / areas.unproj
+
+# not a MASSIVE difference, but can still introduce error
+
+```
+
+
+
+
+
+Now let's try that intersect function again
+
+```{r}
+study.streams <- sf::st_intersection(oh_streams_p, study.area_p)
+```
+
+Plot it
+
+```{r}
+tm_shape(study.streams) + tm_lines()
+```
+
+Let's add both layers
+
+```{r}
+tm_shape(study.area_p) + tm_polygons(fill = "NAME") + 
+  tm_shape(study.streams) + tm_lines(col = "red") # this colors the lines based on a color we gave it (red)
+```
+
+Another option
+
+```{r}
+tm_shape(study.area_p) + tm_polygons(fill = "NAME") + 
+  tm_shape(study.streams) + tm_lines(col = "assessmentunitname") # this colors the lines based on a variable in the dataset
+```
+
+
+## Buffers
+
+What's a buffer?
+
+Break down this code
+
+```{r}
+buffs <- sf::st_buffer(study.streams, dist = 1000)
+
+tm_shape(buffs) + tm_polygons(fill = "assessmentunitname")
+
+```
+
+Let's add some parks. There are two parks files in the `/data/ohio/` directory. One is a shapefile, one is a geopackage. What's the difference?
+
+
+```{r}
+oh_parks_shp <- read_sf("./ohio/ohio_parks.shp")
+oh_parks <- read_sf("./ohio/oh_parks.gpkg")
+```
+
+They're VERY similar, but there are some cases where they might not be the same. Think about when/where, and let's have a class discussion if you're not sure
+
+
+Let's subset the parks to our study area. Don't forget - we need to reproject first!
+```{r}
+oh_parks_p <-  sf::st_transform(oh_parks, 6346) 
+
+oh_parks_p_studyarea <- sf::st_intersection(oh_parks_p, study.area_p)
+
+tm_shape(oh_parks_p_studyarea) + tm_polygons(fill = "FEATTYPE")
+
+
+```
+
+Let's do some more layering in a map - we can even change the palette we want to use!
+
+```{r}
+
+tm_shape(study.area_p) + tm_polygons(fill = "NAME") + 
+  tm_shape(oh_parks_p_studyarea) + tm_polygons(fill = "FEATTYPE", palette = "brewer.dark2") +
+  tm_shape(study.streams) + tm_lines(col = "red")
+
+## Perhaps a bit on the ugly side, but it gets the point across
+
+```
+## Distances
+
+As an example, let's say we want to know the distance between parks and streams. We can use the following function
+
+```{r}
+sf::st_distance(study.streams, oh_parks_p_studyarea) 
+```
+
+
+Yikes, that's a bit of a mess. Let's turn that into a tibble (which is a kind of fancy table, and also a replacement for the tidyverse data frame)
+
+```{r}
+sf::st_distance(study.streams, oh_parks_p_studyarea) %>% as_tibble()
+```
+
+That's more intepretable. We have a 3 x 345 table. How might you infer what each row and each column represent? 
+(Hint, go back to the data you gave to the `st_distance()` function)
+
+
+
+## YOUR TASKS
+
+I have given you all of the tools to complete the following items:
+
+### Task(s) 2
+- find ALL of the Ohio parks within 1km of a 303d stream
+- Make a map (using `tmap`) of just those parks (not all parks), overlaid on a Ohio county map
+- Add a color to the parks based on the type of park (like we did)
+
+### Task(s) 2
+- Calculate the distance between parks and 303d streams in the study area
+- Then, calculate the *difference* between projected and unprojected distances
+- Then, make a histogram of those differences (better termed "errors")
+
+
+### Bonus work
+- How many counties do NOT have a 303d stream in them?
+- What county intersects the most parks? The most streams? The most 303d streams?

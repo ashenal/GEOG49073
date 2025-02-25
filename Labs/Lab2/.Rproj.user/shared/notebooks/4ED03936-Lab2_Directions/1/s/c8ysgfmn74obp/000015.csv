@@ -1,0 +1,8 @@
+"0",""
+"0","# finally, an alternative to removing the outliers would be to log-transform the y-axis"
+"0","# But be careful, this removes a lot of the data because the log of 0 is undefined"
+"0","bmps %>% ggplot(., aes(x = StateAbbreviation, y = AmountCredited)) +"
+"0","  geom_boxplot(aes(fill = StateAbbreviation)) +"
+"0","  scale_y_log10() +"
+"0","  labs(y = ""log10(AmountCredited)"")"
+"0",""

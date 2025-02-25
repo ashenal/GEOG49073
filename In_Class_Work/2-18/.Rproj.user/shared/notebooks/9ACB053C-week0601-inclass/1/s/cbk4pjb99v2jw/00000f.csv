@@ -1,0 +1,12 @@
+"0","tmap_mode(""view"")"
+"2","[38;5;252m[36mℹ[38;5;252m tmap mode set to [34m""view""[38;5;252m.[39m"
+"0","tm_shape(kde) +"
+"0","  tm_polygons(col = ""kde_value"", palette = ""viridis"", title = ""KDE Estimate"") "
+"2","
+"
+"2","[36m──[39m [1mtmap v3 code detected[22m [36m───────────────────────────────────────────────────────────────────────────────────────[39m
+"
+"2","[38;5;252m[32m[v3->v4][38;5;252m `tm_tm_polygons()`: migrate the argument(s) related to the scale of the visual variable `fill` namely
+'palette' (rename to 'values') to fill.scale = tm_scale(<HERE>).[39m"
+"2","[38;5;252m[32m[v3->v4][38;5;252m `tm_polygons()`: migrate the argument(s) related to the legend of the visual variable `fill` namely
+'title' to 'fill.legend = tm_legend(<HERE>)'[39m"

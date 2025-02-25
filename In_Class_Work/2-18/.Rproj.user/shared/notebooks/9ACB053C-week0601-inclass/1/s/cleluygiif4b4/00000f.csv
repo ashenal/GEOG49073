@@ -1,0 +1,13 @@
+"0","tmap_mode(""view"")"
+"2","[38;5;252m[36mℹ[38;5;252m tmap mode set to [34m""view""[38;5;252m.[39m"
+"0","tm_shape(kde) +"
+"0","  tm_raster(palette = ""viridis"", title = ""KDE Estimate"") +"
+"0","  tm_shape(ks) "
+"2","
+"
+"2","[36m──[39m [1mtmap v3 code detected[22m [36m───────────────────────────────────────────────────────────────────────[39m
+"
+"2","[38;5;252m[32m[v3->v4][38;5;252m `tm_tm_raster()`: migrate the argument(s) related to the scale of the visual variable
+`col` namely 'palette' (rename to 'values') to col.scale = tm_scale(<HERE>).[39m"
+"2","[38;5;252m[32m[v3->v4][38;5;252m `tm_raster()`: migrate the argument(s) related to the legend of the visual variable
+`col` namely 'title' to 'col.legend = tm_legend(<HERE>)'[39m"

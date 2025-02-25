@@ -1,0 +1,21 @@
+"0",""
+"0","counties <- st_transform(counties, st_crs(dams))# set streams to same crs as dams"
+"0",""
+"0","dams_counties <- st_join(dams, counties) # spatially join dams and counties"
+"0",""
+"0","dams_counties %>%"
+"0","  group_by(STATEFP10) %>% # group by state"
+"0","  summarize(Dams_Removed = n()) # count occurrence of each state in the dams list"
+"1","Simple feature collection with 3 features and 2 fields"
+"1","
+"
+"1","Geometry type: MULTIPOINT
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -79.03091 ymin: 37.23352 xmax: -75.53803 ymax: 41.71974"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

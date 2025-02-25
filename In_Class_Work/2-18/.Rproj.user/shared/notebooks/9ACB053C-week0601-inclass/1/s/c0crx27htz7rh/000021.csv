@@ -1,0 +1,7 @@
+"0","idw_result <- gstat::idw(ks$pctWht0102~1, ks, grd_idw)"
+"1","[inverse distance weighted interpolation]
+"
+"0","ggplot() + geom_stars(data = idw_result, "
+"0","                      aes(fill = var1.pred, x = x, y = y)) + "
+"0","    xlab(NULL) + ylab(NULL) +"
+"0","    geom_sf(data = st_cast(ca, ""MULTILINESTRING"")) #+"

@@ -1,0 +1,262 @@
+---
+title: "week06-inclass"
+author: "Patrick Bitterman"
+date: "2025-02-16"
+output: html_document
+---
+
+
+## Load packages
+```{r}
+library(tidyverse)
+library(sf)
+library(tmap)
+library(gstat)
+library(SpatialKDE)
+library(stars)
+```
+Note, examples are modified from the R Spatial Data Science book chapter on interpolation. If you want to know/read more, you can do so here: https://r-spatial.org/book/12-Interpolation.html
+
+
+## read the files in
+```{r}
+ca.path <- "./data/ca_points/california.gpkg"
+ks.path <- "./data/ca_points/ca_k_pbe.gpkg"
+
+ca <- sf::read_sf(ca.path)
+ks <- sf::read_sf(ks.path)
+
+```
+
+
+## ESDA
+
+What are the data?
+```{r}
+glimpse(ks)
+
+
+ks %>% 
+  ggplot(., aes(x = pbe1415)) + 
+  geom_histogram(bins = 40) +
+  theme_minimal()
+
+```
+
+What other ESDA could you perform?
+
+
+## Plot
+
+Let's do some simple mapping as we would normally
+
+```{r}
+tm_shape(ca) + tm_polygons() + tm_shape(ks) + tm_dots(fill='navyblue', size = 0.1)
+
+## Note the above controls on point fill and size. Experiment with different values
+
+```
+
+
+A more interactive way of using TMAP
+```{r}
+tmap_mode("view")
+
+tm_shape(ca) + tm_polygons() + tm_shape(ks) + tm_dots(fill='navyblue', size = .4)
+```
+
+set it back to plot mode
+
+```{r}
+tmap_mode("plot")
+
+tm_shape(ca) + tm_polygons() + tm_shape(ks) + tm_dots(fill='navyblue', size = .2)
+```
+
+### Dots vs. bubbles
+In the tmap R package, both `tm_dots()` and `tm_bubbles()` are used to visualize point data, but they differ in how they represent attributes:
+
+`tm_dots()`: Plots points as uniform-sized dots, useful for simple point visualizations where all points are given equal emphasis.
+
+`tm_bubbles()`: Plots points as circles (bubbles) with variable sizes based on an attribute, allowing visualization of differences in magnitude.
+
+_Key Difference_: `tm_dots()` is for uniform point representation, while `tm_bubbles()` uses point size to convey quantitative differences in an attribute.
+
+
+
+# Interpolation
+
+Based on your readings, what's the purpose of interpolation and how does it work???
+
+JARGON AHOY!!!
+
+KDE vs. IDW vs. KRIGING... ANY IDEAS?
+
+
+### KDE
+
+Kernel Density Estimation (KDE) is a non-parametric spatial analysis technique used to estimate the probability density function of point data over a continuous surface, effectively identifying areas of high and low concentration.
+
+
+There are many different packages that can calculate a KDE. We're going to use `SpatialKDE` as an example
+
+```{r}
+# Define some initial parameters - what are the units???
+# Meters because that is the projection Dr. Bitterman used
+
+cell_size <- 5000
+band_width <- 10000
+## These are probably larger than we'd typically want
+## But let's keep it coarser for computation time
+
+```
+
+
+Wait, we said KDE was non-parametric, and yet we just defined parameters. 
+What does it mean to be "non-parametric"? Does it mean NO parameters?
+
+Non-parametric means no assumed distribution about where the points lie
+
+We need to setup a grid first. We'll use the California shape to get started
+```{r}
+grid_ca <- ca %>%
+  create_grid_rectangular(cell_size = cell_size, side_offset = band_width)
+```
+
+
+Plot the grid just to check
+```{r}
+tm_shape(grid_ca) + tm_polygons()
+```
+
+Let's do the KDE, might take a while to run
+
+```{r}
+kde <- ks %>%
+  SpatialKDE::kde(band_width = band_width, kernel = "quartic", grid = grid_ca)
+```
+
+Visualize the KDE
+
+```{r}
+tm_shape(kde) +
+  tm_polygons(col = "kde_value", palette = "viridis", title = "KDE Estimate") 
+```
+A bit hard to see, so how would we allow for interactive mapping?
+ 
+```{r}
+tmap_mode("view")
+
+tm_shape(kde) +
+  tm_polygons(col = "kde_value", palette = "viridis", title = "KDE Estimate") 
+```
+
+
+
+### An alternative KDE method using a raster data model
+
+In this first example, we the grid function created a bunch of small square polygons. They LOOK like a raster image, but they're not. 
+
+So for the sake of illustration, let's instead do a KDE with a raster.
+
+We first prepare a raster with given cell size. The raster should be slightly bigger than convex hull of the data.
+```{r}
+raster_ks <- ks %>%
+  create_raster(cell_size = cell_size, side_offset = band_width)
+```
+
+Create the KDE (again, this may take some time)
+```{r}
+kde <- ks %>%
+  kde(band_width = band_width, kernel = "triweight", grid = raster_ks)
+```
+
+
+And like before, we can plot it
+```{r}
+tmap_mode("view")
+
+tm_shape(kde) +
+  tm_raster(palette = "viridis", title = "KDE Estimate") +
+  tm_shape(ks) 
+```
+
+## IDW
+
+Inverse Distance Weighting (IDW) is an interpolation technique that estimates values at unsampled locations based on the weighted average of nearby known values, with closer points having greater influence. 
+
+Let's first start by making another grid
+```{r}
+grd_idw <- ca %>% 
+  st_bbox(.) %>%
+  st_as_stars(dx = 2500) %>%
+  st_crop(., ca)
+
+
+grd_idw
+```
+Here, we chose grid cells not too fine, so that we still see them in plots.
+
+Perhaps the simplest interpolation method is inverse distance weighted interpolation, which is a weighted average, using weights inverse proportional to distances from the interpolation location.
+
+
+Before we start, let's break down the function and notation
+```{r}
+idw_result <- gstat::idw(ks$pbe1415~1, ks, grd_idw)
+```
+
+
+
+In R, the ~1 notation is commonly used in modeling functions to specify an intercept-only model, meaning that no predictor variables are included. This notation appears in various contexts, including spatial interpolation `(gstat::idw())`, `regression (lm())`, and mixed-effects modeling `(lme4::lmer())`, where it indicates that predictions or estimates should be based only on a constant value (e.g., a global mean or spatial trend) rather than explanatory variables.
+
+Let's plot with ggplot instead of tmap
+
+```{r}
+ggplot() + geom_stars(data = idw_result, 
+                      aes(fill = var1.pred, x = x, y = y)) + 
+    xlab(NULL) + ylab(NULL) +
+    geom_sf(data = st_cast(ca, "MULTILINESTRING")) #+
+    #geom_sf(data = ks)
+```
+## Questions for thought
+
+1. How does Kernel Density Estimation (KDE) differ from Inverse Distance Weighting (IDW) in terms of what they measure and how they are used?  
+
+2. Why does IDW assume that nearby points have more influence than distant ones, and how might this assumption be problematic in some cases?  
+
+3. KDE produces a smooth density surface, while IDW creates an interpolated surface—how does this difference affect their applications in spatial analysis?  
+
+4. What are some limitations of IDW when interpolating spatial data, especially in areas with sparse or unevenly distributed points?  
+
+## TRY WITH A PARTNER (in-class)
+
+- How does the IDW output change if you change the bandwidth/grid size? Why does it change in the way it does?
+- Try mapping a different variable. How would you do this?
+
+
+```{r}
+
+#New grid
+
+grd_idw <- ca %>% 
+  st_bbox(.) %>%
+  st_as_stars(dx = 2500) %>%
+  st_crop(., ca)
+
+grd_idw
+
+idw_result <- gstat::idw(ks$pctWht0102~1, ks, grd_idw)
+
+ggplot() + geom_stars(data = idw_result, 
+                      aes(fill = var1.pred, x = x, y = y)) + 
+    xlab(NULL) + ylab(NULL) +
+    geom_sf(data = st_cast(ca, "MULTILINESTRING")) #+
+    #geom_sf(data = ks)
+
+
+```
+
+
+
+
+

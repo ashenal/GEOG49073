@@ -1,0 +1,3 @@
+"0",""
+"0","# edit the bmps variable in place, which isn't always best practices"
+"0","bmps <- bmps %>% mutate(., FIPS.trimmed = stringr::str_sub(GeographyName, 1, 5))"

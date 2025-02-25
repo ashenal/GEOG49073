@@ -1,0 +1,21 @@
+"0",""
+"0","stream_length <- streams %>% st_length() # find stream length as a list"
+"0",""
+"0","streams %>% "
+"0","  mutate(stream_length) %>% # make a new column in streams df using stream_length list"
+"0","  sort_by(desc(stream_length)) %>% # sort descending length"
+"0","  select(OBJECTID_1,GNIS_Name,stream_length) %>% # select only needed columns"
+"0","  head(5)"
+"1","Simple feature collection with 5 features and 3 fields"
+"1","
+"
+"1","Geometry type: LINESTRING
+"
+"1","Dimension:     XY
+"
+"1","Bounding box:  "
+"1","xmin: -79.06165 ymin: 37.96144 xmax: -76.05378 ymax: 41.66711"
+"1","
+"
+"1","Geodetic CRS:  WGS 84
+"

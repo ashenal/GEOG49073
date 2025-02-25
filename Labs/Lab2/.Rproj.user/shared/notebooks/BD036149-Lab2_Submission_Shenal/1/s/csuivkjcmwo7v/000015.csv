@@ -1,0 +1,27 @@
+"0","library(scales) # Found this package so that I can remove the scientific notion on the plot axis"
+"2","
+Attaching package: ‘scales’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    discard
+
+"
+"2","The following object is masked from ‘package:readr’:
+
+    col_factor
+
+"
+"0","bmps %>% "
+"0","  filter(., Unit == 'Acres') %>% # Only get Bmps with unit of acres"
+"0","  filter(., Cost <= 7500000) %>% # Limit the cost slightly to reduce skewing"
+"0","  ggplot(., aes(x = Cost, y = TotalAmountCredited)) +"
+"0","  geom_point() +"
+"0","  scale_x_continuous(labels = comma) + # removes sci not. and adds commas instead"
+"0","  scale_y_continuous(labels = comma) +"
+"0","  theme_bw() +"
+"0","  labs(title = 'Cost vs amount credited for BMPs',"
+"0","       subtitle = '(Unit type of acres only)',"
+"0","       x = ""Cost"","
+"0","       y = 'Total Amount Credited')"

@@ -106,7 +106,6 @@ d.counties %>%
        subtitle = 'County scale',
        x = "Area of Land",
        y = 'Area of Water',
-       color = 'State FIPS')
 
 ```
 
