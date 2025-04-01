@@ -1,0 +1,15 @@
+"0",""
+"0","counties <- read_sf(""./Data/ohio/oh_counties.gpkg"")"
+"0","rivers <- read_sf(""./Data/ohio/ohio_rivers.gpkg"")"
+"0",""
+"0",""
+"0","# 7-day snowfall totals for a given day"
+"0","snow <- read_csv(""./Data/snow/oh_snowfall_data_2025-02-28.csv"", skip = 4) "
+"2","[1mRows: [22m[34m283[39m [1mColumns: [22m[34m38[39m"
+"2","[36m──[39m [1mColumn specification[22m [36m──────────────────────────────────────────────────────────────────────[39m
+[1mDelimiter:[22m "",""
+[31mchr[39m (35): GHCN ID, Station Name, County, State, Jan 1, Jan 2, Jan 3, Jan 4, Jan 5, Jan 6, ...
+[32mdbl[39m  (3): Elevation, Latitude, Longitude"
+"2","
+[36mℹ[39m Use `spec()` to retrieve the full column specification for this data.
+[36mℹ[39m Specify the column types or set `show_col_types = FALSE` to quiet this message."

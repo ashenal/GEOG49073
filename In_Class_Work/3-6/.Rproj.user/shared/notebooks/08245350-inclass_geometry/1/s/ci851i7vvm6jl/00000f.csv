@@ -1,0 +1,6 @@
+"0","snowpoints <- st_as_sf(snow, coords = c(""Longitude"", ""Latitude""), crs = 4326)"
+"0",""
+"0",""
+"0",""
+"0","tm_shape(counties) + tm_polygons() +"
+"0","  tm_shape(snowpoints) + tm_bubbles()"

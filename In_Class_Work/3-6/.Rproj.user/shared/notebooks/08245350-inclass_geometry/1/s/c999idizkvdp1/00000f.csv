@@ -1,0 +1,5 @@
+"0","centroids <- st_centroid(counties)"
+"2","Warning: st_centroid assumes attributes are constant over geometries"
+"0","tm_shape(counties) + tm_polygons() +"
+"0","  tm_shape(centroids) + tm_dots()"
+"0",""

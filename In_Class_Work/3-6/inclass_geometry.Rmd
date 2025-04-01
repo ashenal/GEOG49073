@@ -1,0 +1,105 @@
+---
+title: "inclass_geometry"
+author: "Patrick Bitterman"
+date: "2025-03-06"
+output: html_document
+---
+
+
+```{r}
+library(tidyverse)
+library(sf)
+library(tmap)
+```
+
+# read data
+
+QUESTION: WHAT DOES THE 'skip' parameter do, and why is it necessary?
+
+The skip parameter does not load in the first 4 rows as they are not valid data. 
+
+```{r}
+
+counties <- read_sf("./Data/ohio/oh_counties.gpkg")
+rivers <- read_sf("./Data/ohio/ohio_rivers.gpkg")
+
+
+# 7-day snowfall totals for a given day
+snow <- read_csv("./Data/snow/oh_snowfall_data_2025-02-28.csv", skip = 4) 
+
+
+
+```
+Let's turn the tabular data into points
+
+QUESTION: WHAT IS `crs = 4326`? How would you know what `4326` refers to?
+
+The crs is the coordinate system of the data. 4326 refers to WGS84.
+
+```{r}
+snowpoints <- st_as_sf(snow, coords = c("Longitude", "Latitude"), crs = 4326)
+
+
+
+tm_shape(counties) + tm_polygons() +
+  tm_shape(snowpoints) + tm_bubbles()
+
+
+```
+
+Let's create geometry using centroids
+```{r}
+centroids <- st_centroid(counties)
+
+tm_shape(counties) + tm_polygons() +
+  tm_shape(centroids) + tm_dots()
+
+```
+
+QUESTION: HOW ARE THESE DISTANCE MEASUREMENTS DIFFERENT?
+
+
+```{r}
+
+
+
+portage <- counties %>% dplyr::filter(str_detect(NAME, "Portage"))
+
+cuy <- rivers %>% 
+  dplyr::filter(str_detect(assessmentunitname, "Cuya")) %>%
+  st_transform(., st_crs(portage))
+
+sf::st_distance(cuy, portage)
+
+sf::st_distance(cuy, portage, which = "Great Circle")
+sf::st_distance(cuy, portage, which = "Euclidean")
+sf::st_distance(cuy, portage, which = "Hausdorff")
+sf::st_distance(cuy, portage, which = "Frechet")
+
+
+```
+
+Instead of the polygon for Portage County, let's test wtih the centroid of the county
+
+QUESTION(S): Does using the centroid differ from the polygon measurements above? If so, how? Why? Do the types of distance measurements (the `which` parameter) ALSO differ from geometry to geometry? What does this mean you need to consider when measuring distance?
+```{r}
+portage_centroid <- st_centroid(portage)
+
+sf::st_distance(cuy, portage_centroid)
+
+sf::st_distance(cuy, portage_centroid, which = "Great Circle")
+sf::st_distance(cuy, portage_centroid, which = "Euclidean")
+sf::st_distance(cuy, portage_centroid, which = "Hausdorff")
+sf::st_distance(cuy, portage_centroid, which = "Frechet")
+
+```
+
+
+
+# Tasks
+
+1. Reproject the rivers and counties shapes to UTM 17N (You'll need to figure out the EPSG code). Do the distance measurements change? In what way?
+
+2. In the tmap of the snow totals, scale (and/or shade) the tm_bubbles by the snow totals on January 17th. You'll have to deal with an issue with the data. What's the issue? How did you solve it
+
+
