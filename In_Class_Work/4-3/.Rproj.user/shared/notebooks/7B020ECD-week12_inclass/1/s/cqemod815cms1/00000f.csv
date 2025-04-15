@@ -1,0 +1,5 @@
+"0","myras_focal = "
+"0","  terra::focal(myras.ci, "
+"0","               w = matrix(1, nrow = 3, ncol = 3), "
+"0","               fun = max)"
+"0","plot(myras_focal)"

@@ -1,0 +1,3 @@
+"0","legend_title = expression(""Area (km""^2*"")"")"
+"0","tm_shape(nz) +"
+"0","  tm_polygons(fill = ""Land_area"", fill.legend = tm_legend(title = legend_title))"

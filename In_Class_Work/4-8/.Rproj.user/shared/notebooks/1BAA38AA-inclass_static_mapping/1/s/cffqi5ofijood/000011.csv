@@ -1,0 +1,55 @@
+"0","# next line is commented out becasue you only need to install once"
+"0","install.packages(""spDataLarge"", repos = ""https://nowosad.github.io/drat/"", type = ""source"")"
+"2","WARNING: Rtools is required to build R packages but is not currently installed. Please download and install the appropriate version of Rtools before proceeding:
+
+https://cran.rstudio.com/bin/windows/Rtools/
+"
+"2","Installing package into ‘C:/Users/andre/AppData/Local/R/win-library/4.4’
+(as ‘lib’ is unspecified)
+"
+"2","trying URL 'https://nowosad.github.io/drat/src/contrib/spDataLarge_2.1.2.tar.gz'
+"
+"2","Content type 'application/gzip'"
+"2"," length 24237283 bytes (23.1 MB)
+"
+"2","downloaded 23.1 MB
+
+"
+"1","* installing *source* package 'spDataLarge' ...
+"
+"1","** using staged installation
+"
+"1","** R
+"
+"1","** data
+"
+"1","*** moving datasets to lazyload DB
+"
+"1","** inst
+"
+"1","** byte-compile and prepare package for lazy loading
+"
+"1","** help
+"
+"1","*** installing help indices
+"
+"1","** building package indices
+"
+"1","** testing if installed package can be loaded from temporary location
+"
+"1","** testing if installed package can be loaded from final location
+"
+"1","** testing if installed package keeps a record of temporary installation path
+"
+"1","* DONE (spDataLarge)
+"
+"2","
+"
+"2",""
+"2","The downloaded source packages are in
+	‘C:\Users\andre\AppData\Local\Temp\Rtmpay7JK8\downloaded_packages’"
+"2",""
+"2","
+"
+"0","library(spDataLarge)"
+"0",""

@@ -1,0 +1,3 @@
+"0","nz_water = st_union(nz) %>%"
+"0","     st_buffer(22200) %>%"
+"0","     st_cast(to = ""LINESTRING"")"

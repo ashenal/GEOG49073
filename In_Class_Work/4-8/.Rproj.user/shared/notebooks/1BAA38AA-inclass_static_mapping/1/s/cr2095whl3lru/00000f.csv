@@ -1,0 +1,5 @@
+"0","# nz data comes from spData package"
+"0",""
+"0","tm_shape(nz) +"
+"0","  tm_fill() "
+"0",""

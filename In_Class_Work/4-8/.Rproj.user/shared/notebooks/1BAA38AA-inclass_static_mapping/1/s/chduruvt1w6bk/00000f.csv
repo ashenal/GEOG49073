@@ -1,0 +1,6 @@
+"0",""
+"0","map1 <- tm_shape(nz) + tm_polygons() +"
+"0","  tm_shape(nz_elev) + tm_raster(col_alpha = 0.7)"
+"0",""
+"0","map1"
+"0",""

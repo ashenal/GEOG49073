@@ -1,0 +1,8 @@
+"0","ma1 = tm_shape(nz) + tm_polygons(fill = ""red"")"
+"0","ma2 = tm_shape(nz) + tm_polygons(fill = ""red"", fill_alpha = 0.3)"
+"0","ma3 = tm_shape(nz) + tm_polygons(col = ""blue"")"
+"0","ma4 = tm_shape(nz) + tm_polygons(lwd = 3)"
+"0","ma5 = tm_shape(nz) + tm_polygons(lty = 2)"
+"0","ma6 = tm_shape(nz) + tm_polygons(fill = ""red"", fill_alpha = 0.3,"
+"0","                                 col = ""blue"", lwd = 3, lty = 2)"
+"0","tmap_arrange(ma1, ma2, ma3, ma4, ma5, ma6)"

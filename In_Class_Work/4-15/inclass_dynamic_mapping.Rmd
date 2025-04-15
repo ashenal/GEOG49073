@@ -1,0 +1,303 @@
+---
+title: "in-class dynamic mapping"
+author: "Patrick Bitterman"
+date: "2025-04-10"
+output: html_document
+---
+
+# Today's schedule
+
+- Open discussion
+- Intro to Leaflet (https://rstudio.github.io/leaflet/)
+
+
+
+Packages
+
+```{r}
+library(tidyverse)
+library(terra)
+library(sf)
+library(leaflet) #new
+library(leaflet.extras) #new
+```
+
+# Leaflet
+
+Leaflet is....
+
+...a Javascript library with an API we can access in R. 
+
+Wait, that's a LOT of jargon. Can we add some clarity?
+
+```{r}
+
+```
+
+## Features
+- Interactive panning/zooming
+- Compose maps using arbitrary combinations of:
+    - Map tiles
+    - Markers
+    - Polygons
+    - Lines
+    - Popups
+    - GeoJSON
+    
+## Functionality
+- Create maps right from the R console or RStudio
+- Embed maps in knitr/R Markdown documents and Shiny apps
+- Easily render spatial objects from the sp or sf packages, or data frames with latitude/longitude columns
+- Use map bounds and mouse events to drive Shiny logic
+- Display maps in non spherical mercator projections
+- Augment map features using chosen plugins from leaflet plugins repository
+
+# Demonstration
+
+A simple setup
+
+```{r}
+m <- leaflet()
+
+m
+```
+
+What do you get?
+
+
+Let's try again
+
+```{r}
+m <- leaflet() %>%
+  addTiles()
+
+m
+```
+
+And now? What do you see?
+
+
+Let's build on that
+
+```{r}
+m <- leaflet() %>%
+  addTiles() %>%  # Add default OpenStreetMap map tiles
+  addMarkers(lng = -81.350903, lat = 41.150377, popup="Our McGilvrey Hall GIS Lab")
+
+m
+```
+
+What about now?
+
+## Let's add some complexity
+
+Create some data to plot. Let's break this down a bit. What am I trying to do?
+
+```{r}
+
+# First let's define a color palette we can sample from - this is only really necessary for the demo
+mypal <- RColorBrewer::brewer.pal(12, "Set3")
+
+# start with a data frame
+df <- data.frame(
+  lat = rnorm(100) * 2 + 41,
+  lng = rnorm(100) * 2 - 81.5,
+  size = runif(100, 5, 20),
+  color = sample(mypal, 100, replace = T)
+)
+
+# then add the data frame to a leaflet map
+m2 <- leaflet(df) %>% addTiles()
+
+m2
+```
+
+
+What do you get? Why?
+
+How can we interrogate the properties/attributes of an object?
+
+The `$` operator
+
+```{r}
+m2$x
+```
+
+What do the data look like?
+
+
+Let's try again to visualize it. Again, break down the code first
+
+```{r}
+# first one
+m2 %>% addCircleMarkers(radius = ~size, color = ~color, fill = FALSE)
+
+# second one
+m2 %>% addCircleMarkers(radius = runif(100, 4, 10), color = c('red'))
+
+```
+
+What happened this time???
+
+Let's add some more tiles
+
+```{r}
+# Let's check out some other tiles
+
+m <- leaflet() %>% setView(lng = -81.34, lat = 41.145, zoom = 14)
+m %>% addTiles()
+
+
+# third party tiles using addProvider() function
+
+m %>% addProviderTiles(providers$Stadia.StamenToner)
+m %>% addProviderTiles(providers$CartoDB.Positron)
+m %>% addProviderTiles(providers$CartoDB.DarkMatter)
+m %>% addProviderTiles(providers$Esri.NatGeoWorldMap)
+
+```
+
+Give it a shot. What do you like?
+
+
+## Let's use some of our data
+
+```{r}
+parks <- sf::read_sf("./static_mapping/oh_parks.gpkg") %>%
+  sf::st_transform(., "EPSG:4326") # transform to WGS84 to make Leaflet happy
+
+# set up the map, zoom out a bit
+mp <- leaflet(data = parks) %>% setView(lng = -81.34, lat = 41.145, zoom = 10)
+mp %>% addTiles() %>% 
+  addPolygons(popup = ~NAME, label = ~NAME)
+
+
+```
+
+What's the difference between popup and label?
+
+
+
+## Lines
+
+Who wants to help break down this code?
+
+```{r}
+portage_streams <- sf::read_sf("./static_mapping/tl_2022_39133_linearwater/tl_2022_39133_linearwater.shp") %>%
+  sf::st_transform(., "EPSG:4326") # transform to WGS84 to make Leaflet happy
+
+leaflet(data = portage_streams) %>% 
+  setView(lng = -81.34, lat = 41.145, zoom = 10) %>% 
+  addTiles() %>%
+  addPolylines(., color = "blue", 
+               popup = ~paste0(FULLNAME, ": ", LINEARID))
+
+```
+
+What happened?
+
+
+
+## Multiple layers
+
+(Note, there's a difference here in calling various datasets)
+
+```{r}
+m.both <- leaflet() %>%
+  setView(lng = -81.34, lat = 41.145, zoom = 10) %>% 
+  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%
+  addPolygons(data = parks, popup = ~NAME, label = ~NAME, color = "green") %>%
+  addPolylines(data = portage_streams, color = "blue", 
+               popup = ~paste0(FULLNAME, ": ", LINEARID))
+
+m.both
+
+```
+
+
+# Let's practice
+
+- Add the municipal boundaries in Portage and Summit counties to this map
+- Give them a "popup" corresponding to their name
+- And give the parks a color based on the TYPE of park.
+
+
+
+# Team activity
+
+- Everyone has reviewed the readings/walkthrough for this week (https://rstudio.github.io/leaflet/)
+- Today, we will...
+  1. break into teams
+  2. complete tasks using Leaflet
+  3. present (informally) your results, methods, challenges, etc. (maybe on Thursday)
+  
+- ALL DATA ARE SOMEWHERE IN THE REPOSITORY
+- All tasks are included in the various readings or documentation
+- For some of the extra challenges, you may need to look at the `leaflet.extras` package
+  
+## Tasks
+
+### GROUP 1
+
+- Make a choropleth map of the population density of Ohio Counties. There should be no more than 7 classes
+- When the user "mouses over" a polygon, a pop-up with the county name and population density should appear
+- Place a legend in the bottom-right corner
+
+#### Extra challenges: 
+1. Add a minimap to the interface
+2. Add a "locate me" button to the interface
+
+
+### GROUP 2
+
+- Make a map of the monitoring stations and removed dams in the Chesapeake Bay Watershed
+- The monitoring stations should be symbolized as a filled, semi-transparent circle with the size scaled to the Drainage Area of the station
+- Dam layer should be shaded by the year it was removed
+- Add controls to turn individual layers on and off
+
+```{r}
+library(RColorBrewer)
+
+dams_removed <- read_sf("./CBW/Dam_or_Other_Blockage_Removed_2012_2017.shp") %>% 
+  st_transform(., "EPSG:4326")
+MS <- read_sf("./CBW/Non-Tidal_Water_Quality_Monitoring_Stations_in_the_Chesapeake_Bay.shp") %>% 
+  st_transform(., "EPSG:4326")
+
+colors <- brewer.pal(6, "PuRd")
+pal <- colorFactor(palette = colors, domain = dams_removed$DamRemoval)
+
+
+
+M <- leaflet() %>% 
+  addTiles() %>% 
+  addCircleMarkers(
+    data = MS, 
+    radius = ~log(Drainage_A), 
+    fill = TRUE, 
+    color = "blue", 
+    fillColor = "blue") %>% 
+  addCircleMarkers(
+    data = dams_removed, 
+    radius = 4, 
+    fill = TRUE, 
+    color = ~pal(DamRemoval), 
+    fillColor = ~pal(DamRemoval), 
+    fillOpacity = 1) %>% 
+  addLayersControl(
+    overlayGroups = c("Monitoring Stations", "Removed Dams")
+  )
+
+M
+
+
+```
+
+
+
+
+
+
+
+#### Extra challenges: 
+1. Use a custom icon for the dam layer
+2. Add a control to the interface to change the base map

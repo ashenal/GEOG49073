@@ -1,0 +1,1 @@
+"0","myras.ci %>% terra::global(., ""mean"", na.rm=TRUE)"

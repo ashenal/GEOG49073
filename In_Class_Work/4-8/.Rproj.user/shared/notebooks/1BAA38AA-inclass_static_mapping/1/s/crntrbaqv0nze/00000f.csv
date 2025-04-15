@@ -1,0 +1,5 @@
+"0","tm_shape(nz) +"
+"0","  tm_polygons(fill = ""Land_area"","
+"0","              fill.legend = tm_legend(title = legend_title,"
+"0","                                      orientation = ""landscape"","
+"0","                                      position = tm_pos_out(""center"", ""bottom"")))"

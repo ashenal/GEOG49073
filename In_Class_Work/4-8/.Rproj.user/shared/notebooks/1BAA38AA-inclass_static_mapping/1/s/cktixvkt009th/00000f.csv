@@ -1,0 +1,4 @@
+"0","map_nz_base = tm_shape(nz) + tm_polygons()"
+"0",""
+"0","map_nz_blue_dots = map_nz_base +"
+"0","  tm_shape(nz_height) + tm_dots(size = 0.25, fill = ""blue"")"

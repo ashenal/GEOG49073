@@ -1,0 +1,1 @@
+"0","myras <- terra::rast(""./data/ts_2016.1007_1013.L4.LCHMP3.CIcyano.MAXIMUM_7day.tif"")"

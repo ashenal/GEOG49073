@@ -1,0 +1,3 @@
+"0","terra::freq(myras) %>%  "
+"0","  ggplot(., aes(x = value, y = count)) +"
+"0","  geom_bar(stat = ""identity"")"

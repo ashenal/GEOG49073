@@ -1,0 +1,5 @@
+"0","m <- leaflet() %>%"
+"0","  addTiles() %>%  # Add default OpenStreetMap map tiles"
+"0","  addMarkers(lng = -81.350903, lat = 41.150377, popup=""Our McGilvrey Hall GIS Lab"")"
+"0",""
+"0","m"

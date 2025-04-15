@@ -1,0 +1,4 @@
+"0","# second one"
+"0","m2 %>% addCircleMarkers(radius = runif(100, 4, 10), color = c('red'))"
+"2","Assuming ""lng"" and ""lat"" are longitude and latitude, respectively
+"

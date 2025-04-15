@@ -1,0 +1,5 @@
+"0","# flip the order to illustrate order matters"
+"0","tm_shape(nz) +"
+"0","  tm_borders() +"
+"0","    tm_fill()"
+"0",""

@@ -1,0 +1,8 @@
+"0","m.both <- leaflet() %>%"
+"0","  setView(lng = -81.34, lat = 41.145, zoom = 10) %>% "
+"0","  addProviderTiles(providers$Esri.NatGeoWorldMap) %>%"
+"0","  addPolygons(data = parks, popup = ~NAME, label = ~NAME, color = ""green"") %>%"
+"0","  addPolylines(data = portage_streams, color = ""blue"", "
+"0","               popup = ~paste0(FULLNAME, "": "", LINEARID))"
+"0",""
+"0","m.both"

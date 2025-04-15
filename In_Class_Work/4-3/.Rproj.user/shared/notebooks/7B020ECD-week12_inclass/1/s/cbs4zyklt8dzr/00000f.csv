@@ -1,0 +1,5 @@
+"0","poly1 <- terra::as.polygons(myras, dissolve = T)"
+"0",""
+"0","tmap_mode(""view"")"
+"2","[38;5;252m[36mℹ[38;5;252m tmap mode set to [34m""view""[38;5;252m.[39m"
+"0","tm_shape(poly1) + tm_polygons()"

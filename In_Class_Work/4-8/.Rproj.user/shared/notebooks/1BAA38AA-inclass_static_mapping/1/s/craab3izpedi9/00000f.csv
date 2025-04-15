@@ -1,0 +1,3 @@
+"0","map3 <- tm_shape(nz_height) + tm_symbols()"
+"0",""
+"0","map3"

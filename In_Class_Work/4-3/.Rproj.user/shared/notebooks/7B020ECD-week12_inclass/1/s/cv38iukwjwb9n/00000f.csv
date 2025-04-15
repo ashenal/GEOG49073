@@ -1,0 +1,2 @@
+"0","validRaster <- myras * validdata"
+"0","plot(validRaster)"

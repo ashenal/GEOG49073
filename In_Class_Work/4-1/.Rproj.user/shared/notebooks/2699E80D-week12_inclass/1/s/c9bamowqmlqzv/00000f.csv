@@ -1,0 +1,5 @@
+"0","myras %>% "
+"0","  terra::aggregate(., 3, fun = max) %>%"
+"0","  terra::as.polygons(., dissolve = T) %>%"
+"0","  tm_shape(.) + "
+"0","  tm_polygons()"

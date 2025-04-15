@@ -1,0 +1,4 @@
+"0","# Let's check out some other tiles"
+"0",""
+"0","m <- leaflet() %>% setView(lng = -81.34, lat = 41.145, zoom = 14)"
+"0","m %>% addTiles()"

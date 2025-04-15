@@ -1,0 +1,8 @@
+"0","portage_streams <- sf::read_sf(""./static_mapping/tl_2022_39133_linearwater/tl_2022_39133_linearwater.shp"") %>%"
+"0","  sf::st_transform(., ""EPSG:4326"") # transform to WGS84 to make Leaflet happy"
+"0",""
+"0","leaflet(data = portage_streams) %>% "
+"0","  setView(lng = -81.34, lat = 41.145, zoom = 10) %>% "
+"0","  addTiles() %>%"
+"0","  addPolylines(., color = ""blue"", "
+"0","               popup = ~paste0(FULLNAME, "": "", LINEARID))"

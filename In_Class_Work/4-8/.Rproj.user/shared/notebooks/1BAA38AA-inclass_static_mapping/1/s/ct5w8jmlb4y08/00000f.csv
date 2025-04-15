@@ -1,0 +1,2 @@
+"0","tm_shape(nz) + tm_polygons(fill = ""Median_income"","
+"0","                           fill.scale = tm_scale_intervals(style = ""jenks"", values = ""viridis""))"

@@ -1,0 +1,6 @@
+"0","tm_shape(nz) + tm_polygons(fill = ""Median_income"","
+"0","                           fill.scale = tm_scale_intervals(style = ""equal"", values = ""BuGn""))"
+"2","[38;5;252m[32m[cols4all][38;5;252m color palettes: use palettes from the R package cols4all. Run
+`cols4all::c4a_gui()` to explore them. The old palette name ""BuGn"" is named ""brewer.bu_gn""[39m"
+"2","Multiple palettes called ""bu_gn"" found: ""brewer.bu_gn"", ""matplotlib.bu_gn"". The first one, ""brewer.bu_gn"", is returned.
+"
