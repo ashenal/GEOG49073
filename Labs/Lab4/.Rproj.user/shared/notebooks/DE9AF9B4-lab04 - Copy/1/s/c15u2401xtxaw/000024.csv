@@ -1,0 +1,6 @@
+"0","grid.newpage()
+pushViewport(main_vp)
+print(portage_summit_FullMap, newpage = FALSE)
+"
+"2","[38;5;252m[32m[cols4all][38;5;252m color palettes: use palettes from the R package cols4all. Run `cols4all::c4a_gui()` to explore them. The old palette
+name ""YlGn"" is named ""brewer.yl_gn""[39m"

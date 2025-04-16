@@ -54,6 +54,112 @@ This lab is much more free-form than previous assignments. You will be completin
 ### One NOTE:
 
 *EVERYTHING NEEDS DONE PROGRAMMATICALLY REFERENCING DATA LOCATIONS IN THE REPO*
+```{r}
+library(grid)
+library(terra)
+library(sf)
+library(tidyverse)
+```
+
+
+```{r}
+
+# OHIO SCALE MAPPING
+    # Load data and set crs
+oh2020 <- read_csv("./static_mapping/oh_counties_DP2020.csv") 
+counties <- read_sf("./static_mapping/oh_counties.gpkg") %>% 
+  st_transform("EPSG:4326")
+
+joined.ohio.counties <- left_join(counties, oh2020, by=c("GEOIDFQ"="geoid")) # Join csv and counties
+
+    #mapping
+oh_region = st_bbox(portage_summit) %>%
+  st_as_sfc()
+
+Ohio_Map <- tm_shape(joined.ohio.counties) + 
+  tm_polygons(
+    #fill = "medianage",
+    #lty=5,
+    lwd=2.5)
+    #fill.scale = tm_scale_intervals(style = "equal", values = "BuGn"),
+    #fill.legend = tm_legend(title = "Median Age")) +
+  tm_shape(oh_region) + tm_borders(lwd = 2.5) +
+  tm_scalebar(
+    breaks = c(0, 50, 100), 
+    text.size = .8,
+    position = c("left", "top"))
+
+Ohio_Map
+
+oh_map = tm_shape(allohio) + tm_polygons() + 
+  tm_shape(oh_region) + tm_borders(lwd = 3) +
+  tm_layout(bg.color = "lightblue") +
+  tm_scalebar(position = c("left", "bottom"))
+
+# LOCAL SCALE MAPPING
+    # Load data and set crs
+parks <- read_sf("./static_mapping/oh_parks.gpkg") %>% 
+  st_transform("EPSG:4326")
+streams <- read_sf("./static_mapping/oh_rivers.gpkg") %>% 
+  st_transform("EPSG:4326")
+places <- read_sf("./static_mapping/oh_places.gpkg") %>% 
+  st_transform("EPSG:4326")
+portage_summit <- filter(counties, NAME %in% c("Summit", "Portage"))
+
+sf::sf_use_s2(FALSE)
+
+    # Select only necessary parks + streams in Portage and Summit
+parks_counties <- st_intersection(parks, portage_summit)
+streams_counties <- st_intersection(streams, portage_summit)
+
+    # Make layers then combine into single map
+streammap <- tm_shape(streams_counties) + tm_lines(lwd = 4, col = "darkblue")
+boundary <- tm_shape(portage_summit) + tm_polygons()
+parkmap <- tm_shape(parks_counties) + tm_polygons(fill = "FEATTYPE", palette = "Greens", title = "Park Type")
+
+Local_Map <- boundary + parkmap + streammap
+
+
+# PUTTING IT TOGETHER
+    # Add the DEM, set crs, then clip
+neoh_dem <- terra::rast("./static_mapping/neoh_dem.tif") %>% 
+  project("EPSG:4326") %>% 
+  crop(portage_summit) %>% 
+  mask(portage_summit)
+
+map1 <- tm_shape(portage_summit) + tm_polygons(fill_alpha = 0.2) +
+  tm_shape(neoh_dem) + tm_raster() +  tm_compass(position = c("right", "bottom")) +
+  tm_shape(parks_counties) + tm_polygons(fill = "FEATTYPE", palette = "Greens", title = "Park Type")
+
+    # Inset mapping
+
+norm_dim = function(obj){
+    bbox = st_bbox(obj)
+    width = bbox[["xmax"]] - bbox[["xmin"]]
+    height = bbox[["ymax"]] - bbox[["ymin"]]
+    w = width / max(width, height)
+    h = height / max(width, height)
+    return(unit(c(w, h), "snpc"))
+}
+
+main_dim = norm_dim(oh_region)
+ins_dim = norm_dim(portage_summit)
+
+
+main_vp = viewport(width = main_dim[1], height = main_dim[2])
+
+ins_vp = viewport(width = ins_dim[1] * 0.6, height = ins_dim[2] * 0.6,
+                  x = unit(1, "npc") - unit(0.6, "cm"), y = unit(0.1, "npc"),
+                  just = c("right", "bottom"))
+
+grid.newpage()
+print(map1, vp = main_vp)
+pushViewport(main_vp)
+print(Ohio_Map, vp = ins_vp)
+
+
+
+```
 
 
 2. Make a second static map of your choosing. You may choose any spatial extent, domain, or technique. I'm looking for creativity, good coding practices (including comments), and for you to demonstrate independent thinking. There are minor restrictions you must follow:

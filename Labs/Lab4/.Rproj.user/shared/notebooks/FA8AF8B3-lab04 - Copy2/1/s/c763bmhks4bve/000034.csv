@@ -1,0 +1,6 @@
+"0","Local_Map
+"
+"2","[38;5;252m[32m[cols4all][38;5;252m color palettes: use palettes from the R package cols4all. Run `cols4all::c4a_gui()` to explore them. The old palette
+name ""Dark2"" is named ""brewer.dark2""[39m"
+"2","Multiple palettes called ""dark2"" found: ""brewer.dark2"", ""hcl.dark2"". The first one, ""brewer.dark2"", is returned.
+"
