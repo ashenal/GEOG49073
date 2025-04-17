@@ -1,0 +1,3 @@
+"0","print(oh_height_map, vp = main_vp)"
+"2","[38;5;252m[32m[cols4all][38;5;252m color palettes: use palettes from the R package cols4all. Run `cols4all::c4a_gui()` to explore them.
+The old palette name ""YlGn"" is named ""brewer.yl_gn""[39m"

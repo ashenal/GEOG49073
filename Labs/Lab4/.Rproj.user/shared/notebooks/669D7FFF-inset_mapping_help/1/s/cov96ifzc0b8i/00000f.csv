@@ -1,0 +1,4 @@
+"0","myras <- rast(""./static_mapping/neoh_dem.tif"") %>% "
+"0","  terra::project(., ""EPSG:4269"") %>%"
+"0","  terra::crop(sa)"
+"0",""

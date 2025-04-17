@@ -1,0 +1,6 @@
+"0","Local_Map <- boundary + parkmap + streammap + placesmap +  tm_layout(bg.color = ""lightyellow"")"
+"0",""
+"0",""
+"0","Local_Map"
+"2","Multiple palettes called ""greens"" found: ""brewer.greens"", ""matplotlib.greens"". The first one, ""brewer.greens"", is returned.
+"

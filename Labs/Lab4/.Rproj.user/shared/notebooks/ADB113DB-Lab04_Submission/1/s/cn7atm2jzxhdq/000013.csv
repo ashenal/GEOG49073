@@ -1,0 +1,3 @@
+"0","print(map1, newpage = FALSE)"
+"2","Multiple palettes called ""greens"" found: ""brewer.greens"", ""matplotlib.greens"". The first one, ""brewer.greens"", is returned.
+"

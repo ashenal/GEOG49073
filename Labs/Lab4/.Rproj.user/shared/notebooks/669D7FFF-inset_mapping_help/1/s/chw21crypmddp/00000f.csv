@@ -1,0 +1,4 @@
+"0","oh_map = tm_shape(allohio) + tm_polygons() + "
+"0","  tm_shape(oh_region) + tm_borders(lwd = 3) +"
+"0","  tm_layout(bg.color = ""lightblue"") +"
+"0","  tm_scalebar(position = c(""left"", ""bottom""))"

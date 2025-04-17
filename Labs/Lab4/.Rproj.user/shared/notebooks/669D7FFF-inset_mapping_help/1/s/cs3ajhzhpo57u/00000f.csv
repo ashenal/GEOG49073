@@ -1,0 +1,9 @@
+"0","library(sf)"
+"0","library(terra)"
+"0","library(tmap)"
+"0","library(spData) # new package - you'll likely need to install"
+"2","Warning: package ‘spData’ was built under R version 4.4.3"
+"2","To access larger datasets in this package, install the spDataLarge package with:
+`install.packages('spDataLarge', repos='https://nowosad.github.io/drat/', type='source')`
+"
+"0","library(tidyverse)"
