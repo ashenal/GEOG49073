@@ -1,0 +1,7 @@
+"0","d.long %>% "
+"0","  dplyr::filter(., !lulc %in% c(""forest_cells"", ""tot_cells"")) %>%"
+"0","  ggplot(., aes(x = lulc, y = value, fill = NAME)) +"
+"0","  geom_col() +"
+"0","  theme_minimal() +"
+"0","  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +"
+"0","  labs(x = ""Land use type"", y = ""number of cells"")"

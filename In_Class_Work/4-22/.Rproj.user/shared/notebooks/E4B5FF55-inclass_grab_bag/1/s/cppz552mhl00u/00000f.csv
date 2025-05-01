@@ -1,0 +1,4 @@
+"0",""
+"0","test <- terra::zonal(neoh_lulc, neoh_counties)"
+"0",""
+"0","test"

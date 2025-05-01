@@ -1,0 +1,5 @@
+"0","# just those tracts"
+"0","pc.tracts <- terra::intersect(oh_tracts, portage)"
+"0",""
+"0","# map it to make sure we have what we want"
+"0","pc.tracts %>% mapview()"

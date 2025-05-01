@@ -1,0 +1,5 @@
+"0","summit_tracts_sf <- sc.tracts %>%"
+"0","  as_sf() %>%"
+"0","  rowwise() %>%"
+"0","  mutate(shdi = calc_shannon_sf(lulc.sc, geometry)) %>%"
+"0","  ungroup()"

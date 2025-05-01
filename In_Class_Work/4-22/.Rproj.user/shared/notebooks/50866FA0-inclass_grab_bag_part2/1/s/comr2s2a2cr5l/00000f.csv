@@ -1,0 +1,8 @@
+"0","sc.tracts <- terra::intersect(oh_tracts, summit)"
+"0","lulc.sc <- neoh_lulc %>% terra::crop(., summit)"
+"0",""
+"0","# map it to make sure we have what we want"
+"0","mapview(lulc.sc) + mapview(sc.tracts)"
+"2","Number of pixels is above 5e+05.Only about 5e+05 pixels will be shown.
+You can increase the value of `maxpixels` to 1646730 to avoid this.
+"

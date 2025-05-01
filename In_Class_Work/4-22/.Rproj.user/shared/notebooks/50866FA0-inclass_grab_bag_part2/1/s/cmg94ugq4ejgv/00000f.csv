@@ -1,0 +1,1 @@
+"0","portage.results <- map_dfr(1:nrow(pc.tracts), calc_shannon_wrapper, r = lulc.portage, tracts = pc.tracts)"

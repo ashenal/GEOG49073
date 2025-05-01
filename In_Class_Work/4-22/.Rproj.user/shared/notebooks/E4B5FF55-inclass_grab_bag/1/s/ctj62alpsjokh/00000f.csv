@@ -1,0 +1,6 @@
+"0","d.long <- d.joined.for %>%"
+"0","  st_drop_geometry() %>%"
+"0","  dplyr::select(-(LSAD:simpleid)) %>%"
+"0","  pivot_longer(., cols = Unclassified:frac_forest, names_to = ""lulc"", values_to = ""value"")"
+"0",""
+"0","d.long"

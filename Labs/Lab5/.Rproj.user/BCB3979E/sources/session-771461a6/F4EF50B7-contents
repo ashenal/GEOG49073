@@ -1,0 +1,301 @@
+---
+title: "Lab 05"
+#author: "Dr. Patrick Bitterman"
+#date: "`r format(Sys.time(), '%Y %B %d')`"
+output: 
+   pdf_document: 
+      template: my_template.tex
+      keep_tex: true
+my_subtitle: "Env Analysis in R"
+fancy: true
+geometry: margin=1in
+latex_engine: pdflatex
+colorlinks: true
+---
+
+# Lab 05: Dynamic mapping in Leaflet
+
+### Read the instructions COMPLETELY before starting the lab
+
+This lab builds on many of the discussions and exercises from class, including lab 4
+
+### Formatting your submission
+
+This lab must be placed into a public repository on GitHub (www.github.com). Before the due date, submit **on Canvas** a link to the repository. I will then download your repositories and run your code. The code must be contained in either a .R script or a .Rmd markdown document. As I need to run your code, any data you use in the lab must be referenced using **relative path names**. Finally, answers to questions I pose in this document must also be in the repository at the time you submit your link to Canvas. They can be in a separate text file, or if you decide to use an RMarkdown document, you can answer them directly in the doc.
+
+## Introduction
+
+This lab is much more free-form than previous assignments. You will be taking previous work from previous labs re-creating the maps using the Leaflet package. I encourage you to use whatever resources you find useful, including https://rstudio.github.io/leaflet/ and https://bookdown.org/nicohahn/making_maps_with_r5/docs/leaflet.html
+
+
+
+
+## Your tasks
+
+For this lab, you will re-create maps from labs 2-4 using Leaflet. Below, I have referenced a specific question or task from lab 2, lab 3, and lab 4. Further, I have added new, Leaflet-specific tasks to each item. You will need to look back to previous labs to find the relevant context for each task. Create the maps as specified, then answer the questions at the end.
+
+
+```{r message=FALSE, warning=FALSE}
+#SETUP
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(leaflet.extras)
+library(tmap)
+library(classInt)
+library(spdep)
+
+```
+
+
+### Task 1. From lab 2, task 2.3:
+
+*Original task to be recreated using Leaflet:* Make a map of the counties, shading each county by the total cost of BMPs funded/implemented in that county. This will required you to join multiple datasets together
+
+*Leaflet/other extras to add:*
+
+- Mouse-over label the displays the total cost of BMPs funded in that county
+
+- Use an equal-interval classification method with 5 classes. Determine the breaks programmatically.
+
+- Do NOT use the default color scheme
+
+
+```{r}
+
+# Data Pull
+counties <- sf::read_sf("./CBW/County_Boundaries.shp") %>% 
+  sf::st_make_valid() %>% 
+  st_transform(., "EPSG:4326")
+
+bmps <- read_csv("./CBW/BMPreport2016_landbmps.csv")
+
+# Find total cost per county in the BMPS table
+bmps1 <- bmps %>%
+  mutate(., FIPS.trimmed = stringr::str_sub(GeographyName, 1, 5)) %>% 
+  group_by(FIPS.trimmed) %>% 
+  summarize(Total_Cost = sum(Cost, na.rm = T))
+  
+# Join data to acquire the total cost column on the counties layer
+County_BMP <- counties %>% 
+  left_join(bmps1, by = c("GEOID10" = "FIPS.trimmed"))
+
+# Make equal interval breaks and create color palette 
+#(might be a different way to do this but I found the classInt package while searching for how to accomplish this task)
+equal_interval <- classIntervals(County_BMP$Total_Cost, n = 5, style = "equal")$breaks
+pal_equal <- colorBin("YlOrRd", domain = County_BMP$Total_Cost, bins = 5)
+
+# Leaflet Map
+Task_1 <- leaflet(County_BMP) %>%
+  addTiles() %>%
+  addPolygons(
+    data = County_BMP,
+    fillColor = ~pal_equal(Total_Cost),
+    stroke = TRUE,
+    color = 'black',
+    fillOpacity = 1,
+    weight = 2,
+    popup = ~paste0("Total Cost: $", Total_Cost),
+    label =  ~paste0("Total Cost: $", Total_Cost)) %>%
+  addLegend(pal = pal_equal, values = ~Total_Cost, title = "Total Cost")
+
+Task_1
+
+
+
+```
+
+
+### Task 2. From lab 3, task Bonus #2:
+
+*Original task to be recreated using Leaflet:* plot a choropleth map of your dataset with a categorical color scheme, where the shading corresponds to the Moran plot (really, “LISA”) quadrants. Thus, your map will have four shades of color.
+
+*Leaflet/other extras to add:*
+
+- Add a pop-up window that displays the p-value (you'll have to look at the `moran.plot()` documentation) when you click on that county with a mouse
+
+- Add a control to change between 3 different basemaps
+
+```{r}
+d.Midwest <- st_read("./data/d.Midwest")
+
+# Pull in and GEOID needs fixed to match counties
+d.x8 <- read_csv("./data/x08_Commuting.csv") %>% 
+  mutate(fixed_geoid = str_sub(GEOID, start = 8, end = -1))
+
+# Join data
+JoinedData <- d.Midwest %>% left_join(., d.x8, by = c("GEOID" = "fixed_geoid"))
+
+JoinedData <- JoinedData %>% 
+  select(STATEFP, COUNTYF, GEOID, NAME, TOT_POP = B08006e1, Drove_Alone = B08006e20) %>%  # Select the needed columns
+  mutate(PntPersonalCom = (Drove_Alone/TOT_POP)*100) %>%  # new column: % of people who commute with a personal vehicle
+  st_transform(., "EPSG:4326")
+
+
+# make the neighborhood
+nb <- spdep::poly2nb(JoinedData, queen = TRUE)
+
+# Assign weights using style W
+lw <- nb2listw(nb, style="W", zero.policy=TRUE)
+
+
+################
+# I had a harder time with this part so if it looks weird it is because I got a lot of help from online forums and documentations
+################
+
+localmoran <-localmoran(JoinedData$PntPersonalCom, lw, zero.policy = TRUE)
+Lag <- lag.listw(lw, JoinedData$PntPersonalCom, zero.policy = TRUE)
+
+# Add the p value and lag info to the counties
+JoinedData$P.Ii <- localmoran[, "Pr(z != E(Ii))"]
+Lag <- JoinedData$PntPersonalCom_lag
+
+# Standardize the variables - this is to make the next step easier. Scaling makes the means 0
+JoinedData$PntPersonalCom_std <- scale(JoinedData$PntPersonalCom)
+JoinedData$PntPersonalCom_lag_std <- scale(JoinedData$PntPersonalCom_lag)
+
+# Classify observations into LISA clusters using the standardizing variables and the p value
+JoinedData$lisa_cluster <- case_when(
+  JoinedData$PntPersonalCom_std > 0 & 
+    JoinedData$PntPersonalCom_lag_std > 0 & 
+    JoinedData$P.Ii <= 0.05 ~ "High-High",
+  
+  JoinedData$PntPersonalCom_std < 0 & 
+    JoinedData$PntPersonalCom_lag_std < 0 & 
+    JoinedData$P.Ii <= 0.05 ~ "Low-Low",
+  
+  JoinedData$PntPersonalCom_std < 0 & 
+    JoinedData$PntPersonalCom_lag_std > 0 & 
+    JoinedData$P.Ii <= 0.05 ~ "Low-High",
+  
+  JoinedData$PntPersonalCom_std > 0 & 
+    JoinedData$PntPersonalCom_lag_std < 0 & 
+    JoinedData$P.Ii <= 0.05 ~ "High-Low",
+  
+  TRUE ~ "Not significant")
+
+# make a color palette for the LISA values
+pal <- c("High-High" = "red",
+                 "Low-Low" = "blue",
+                 "Low-High" = "lightblue",
+                 "High-Low" = "pink",
+                 "Not significant" = "white")
+
+pal_lisa <- colorFactor(palette = pal, domain = JoinedData$lisa_cluster) 
+
+# leaflet mapping
+Task_2 <- leaflet(JoinedData) %>% 
+  addTiles() %>% 
+  addPolygons(
+    data = JoinedData,
+    fillColor = ~pal_lisa(lisa_cluster),
+    stroke = TRUE,
+    color = 'black',
+    fillOpacity = 1,
+    weight = 2,
+    popup = ~paste0("P-Value:", P.Ii)) %>% 
+   addProviderTiles(
+    "Esri.WorldStreetMap",
+    group = "Esri.WorldStreetMap") %>%
+  addProviderTiles(
+    "Esri.WorldImagery",
+    group = "Esri.WorldImagery") %>%
+  addProviderTiles(
+    "Stamen.TonerHybrid",
+    group = "Stamen.TonerHybrid") %>% 
+  addLayersControl(baseGroups = c('Esri.WorldStreetMap', 'Esri.WorldImagery', 'Stamen.TonerHybrid')) %>% 
+  addLegend(position = "bottomright", pal = pal_lisa, values = ~lisa_cluster, title = 'LISA Clusters', opacity = 1)
+  
+Task_2
+
+
+```
+
+
+### Task 3: From lab 4, task 2:
+
+*Original task to be recreated using Leaflet:* Make a second  map of your choosing. You may choose any spatial extent, domain, or technique. I'm looking for creativity, good coding practices (including comments), and for you to demonstrate independent thinking. There are minor restrictions you must follow:
+
+1. It must include vector AND raster data in some manner
+    
+2. It must include spatial data relating to a social process (e.g., political boundaries) AND spatial data relating to an environmental process (e.g., water resources)
+    
+3. The map should "stand on its own" and communicate its purpose without additional text
+    
+4. That's it!
+
+*Leaflet/other extras to add:*
+
+- Add a control that turns on/off each layer
+
+- Since everyone's maps are different, I can't specify exactly what else you should add. But, find one thing cool, interesting, or applicable to YOUR map, and implement it.
+
+```{r}
+
+library(terra)
+
+# Pull in redlining data and filter out unnecessary data
+Redlining <- read_sf("./Data/mappinginequality.gpkg") %>% 
+  filter(city == "Cleveland") %>% 
+  filter(fill != "#000000") %>%
+  filter(grade != "A") %>% 
+  st_transform("EPSG:4326")
+
+# Cuyahoga county boundary
+Cuyahoga_County <- read_sf("./Data/Cuyahoga_Boundary/OH_County_Boundary_ExportFeatures.shp") %>% 
+  st_transform("EPSG:4326")
+
+# Pull and clip tree cover raster
+treecover <- terra::rast("./Data/treecover.tiff") %>% 
+  project("EPSG:4326") %>% 
+  crop(Cuyahoga_County) %>% 
+  mask(Cuyahoga_County)
+
+# Create raster palette
+rast.pal <- colorNumeric(c("lightgreen", "darkgreen"), values(treecover),
+  na.color = "transparent")
+
+# Create redlining polygon palette
+redlining_colors <- c(
+  "B" = "#5f98d4",
+  "C" = "#e6dd60",
+  "D" = "#eb7f5e")
+
+poly.pal <- colorFactor(palette = redlining_colors, domain = Redlining$grade)
+
+# Map in leaflet - Includes fun highlighting option, mouse over the redlinng polygons
+Task_3 <- leaflet() %>% 
+  addTiles() %>% 
+  addRasterImage(treecover, colors = rast.pal, opacity = 0.8, group = "Tree Cover") %>%
+  addPolygons(
+    data = Redlining,
+    fillColor = ~poly.pal(grade),
+    stroke = TRUE,
+    color = 'black',
+    fillOpacity = 0.9,
+    weight = 2,
+    group = "Redlining",
+    highlightOptions = highlightOptions(
+      weight = 3,
+      color = "#666",
+      fillOpacity = 0.3,
+      bringToFront = TRUE)) %>% 
+  addLegend(pal = rast.pal, values = values(treecover),
+    title = "Tree Cover %") %>% 
+  addLayersControl(overlayGroups = c("Tree Cover", "Redlining"))
+
+Task_3
+
+
+```
+
+
+## **Questions:**
+
+1. Reflect on the labs from this semester. What did you learn? What did you like? What did you not like?
+This class helped me learn the capabilities of performing spatial analysis and mapping through code. The ability to create reproducible work and opportunities for efficient analysis (like functions) was very helpful throughout the course. I would say my favorite topics were interactive mapping and the spatial analysis with IDW and others. Working with tmap felt much more tedious compared to those topics so that area of static mapping was probably my least favorite lab (the frankenmap was entertaining though).
+
+
+2. Describe the "one thing" you chose to add to your map in Task 3 above. What did you do, and why is it applicable to your map?
+I added the highlight option in the map. When the redlining polygons are moused over, the polygon becomes more transparent and is highlighted. In this instance it allows the user to see the raster information inside the area of interest, while still creating a visually bright map. 
+

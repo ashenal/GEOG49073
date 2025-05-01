@@ -1,0 +1,137 @@
+#SETUP
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(leaflet.extras)
+library(tmap)
+# Data Pull
+counties <- sf::read_sf("./CBW/County_Boundaries.shp") %>%
+sf::st_make_valid() %>%
+st_transform(., "EPSG:4326")
+bmps <- read_csv("./CBW/BMPreport2016_landbmps.csv")
+# Find total cost per county in the BMPS table
+bmps1 <- bmps %>%
+mutate(., FIPS.trimmed = stringr::str_sub(GeographyName, 1, 5)) %>%
+group_by(FIPS.trimmed) %>%
+summarize(Total_Cost = sum(Cost, na.rm = T))
+# Join data to acquire the total cost column on the counties layer
+County_BMP <- counties %>%
+left_join(bmps1, by = c("GEOID10" = "FIPS.trimmed"))
+# Leaflet Map
+pal = colorNumeric("YlOrRd", domain = County_BMP$Total_Cost, n=5)
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = TRUE,
+color = 'black',
+fillOpacity = 1,
+popup = ~Total_Cost,
+label = ~Total_Cost
+)
+Task_1
+#SETUP
+library(tidyverse)
+library(sf)
+library(leaflet)
+library(leaflet.extras)
+library(tmap)
+# Data Pull
+counties <- sf::read_sf("./CBW/County_Boundaries.shp") %>%
+sf::st_make_valid() %>%
+st_transform(., "EPSG:4326")
+bmps <- read_csv("./CBW/BMPreport2016_landbmps.csv")
+# Find total cost per county in the BMPS table
+bmps1 <- bmps %>%
+mutate(., FIPS.trimmed = stringr::str_sub(GeographyName, 1, 5)) %>%
+group_by(FIPS.trimmed) %>%
+summarize(Total_Cost = sum(Cost, na.rm = T))
+# Join data to acquire the total cost column on the counties layer
+County_BMP <- counties %>%
+left_join(bmps1, by = c("GEOID10" = "FIPS.trimmed"))
+# Leaflet Map
+pal = colorNumeric("YlOrRd", domain = County_BMP$Total_Cost, n=5)
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = TRUE,
+color = 'black',
+fillOpacity = 1,
+popup = ~Total_Cost,
+label = ~Total_Cost)
+Task_1
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = FALSE,
+color = 'black',
+fillOpacity = 1,
+popup = ~Total_Cost,
+label = ~Total_Cost)
+Task_1
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = FALSE,
+color = 'black',
+fillOpacity = 1,
+weight = 2,
+popup = ~Total_Cost,
+label = ~Total_Cost)
+Task_1
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = FALSE,
+color = 'black',
+fillOpacity = 1,
+weight = 2,
+popup = ~Total_Cost,
+label = ~Total_Cost) %>%
+addLegend(pal = pal, values = ~Total_Cost, opacity = 0.7, title = NULL,
+position = "bottomright")
+# Leaflet Map
+pal = colorNumeric("YlOrRd", domain = County_BMP$Total_Cost, n=5)
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = FALSE,
+color = 'black',
+fillOpacity = 1,
+weight = 2,
+popup = ~Total_Cost,
+label = ~Total_Cost) %>%
+addLegend(pal = pal, values = ~Total_Cost, opacity = 0.7, title = NULL,
+position = "bottomright")
+Task_1 <- leaflet() %>%
+addTiles() %>%
+addPolygons(
+data = County_BMP,
+fill = TRUE,
+fillColor = ~pal(Total_Cost),
+stroke = FALSE,
+color = 'black',
+fillOpacity = 1,
+weight = 2,
+popup = ~Total_Cost,
+label = ~Total_Cost) %>%
+addLegend(pal = pal, values = ~Total_Cost)
+?classIntervals
+equal_interval <- classIntervals(County_BMP$Total_Cost, n = 5, style = "equal")$breaks

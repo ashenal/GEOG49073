@@ -1,0 +1,25 @@
+{
+    "id": "644E49ED",
+    "path": null,
+    "project_path": null,
+    "type": "r_code_browser",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1745504706124.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "context": "package:terra:::intersect"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 2553996464376,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1745504706124,
+    "read_only": false,
+    "read_only_alternatives": []
+}

@@ -1,0 +1,226 @@
+---
+title: "Lab 03"
+#author: "Dr. Patrick Bitterman"
+#date: "`r format(Sys.time(), '%Y %B %d')`"
+output: 
+   pdf_document: 
+      template: my_template.tex
+      keep_tex: true
+my_subtitle: "Env Analysis in R"
+fancy: true
+geometry: margin=1in
+latex_engine: pdflatex
+colorlinks: true
+---
+
+# Lab 03: Spatial autocorrelation, globally and locally
+
+### Read the instructions COMPLETELY before starting the lab
+
+This lab builds on many of the discussions and exercises from class, including previous labs.
+
+### Attribution
+
+This lab uses some code examples and directions from https://mgimond.github.io/Spatial/spatial-autocorrelation-in-r.html
+
+### Formatting your submission
+
+This lab must be placed into a public repository on GitHub (www.github.com). Before the due date, submit **on Canvas** a link to the repository. I will then download your repositories and run your code. The code must be contained in either a .R script or a .Rmd markdown document. As I need to run your code, any data you use in the lab must be referenced using **relative path names**. Finally, answers to questions I pose in this document must also be in the repository at the time you submit your link to Canvas. They can be in a separate text file, or if you decide to use an RMarkdown document, you can answer them directly in the doc.
+
+## Data
+
+The data for this lab can be found on the US Census website. 
+
+1. First, go here: https://www.census.gov/geographies/mapping-files/2020/geo/tiger-data.html
+
+2. Second, scroll to the "Download Legal and Administrative Areas Geodatabases" section
+
+3. Click on "County" to download the county data for all of the US (the direct link is also here: https://www2.census.gov/geo/tiger/TIGER_DP/2020ACS/ACS_2020_5YR_COUNTY.gdb.zip). Note, the data are approximately 200 MB in size, so be aware of any connection or storage issues prior to downloading the file.
+
+
+## Introduction
+
+In this lab, we will be calculating the spatial autocorrelation of various Census variables across a subset of the US. Please note, the dataset you downloaded above is larger than the current 100MB limit GitHub imposes on single files. This means you'll be unable to push that dataset to GitHub. Accordingly, I *strongly* suggest you subset the data such that your files are under this limit. This will be vital when I grade your submissions. If you're not certain how to save a subset of the file to disk, look at ```?sf::write_sf``` for help. We will also be using a new package called ```spdep``` in this assignment.
+
+
+We begin by loading the relevant packages and data
+
+```{r packages, echo=TRUE, message = TRUE}
+library(spdep)
+library(sf)
+library(tidyverse)
+library(tmap)
+```
+
+## Your tasks
+
+1. Create a spatial subset of the US, with at AT MINIMUM 4 states, MAXIMUM 7 states. States must be contiguous. Save this subset as a shapefile such that it's sufficiently small in size that GitHub will accept the git-push
+```{r message=FALSE, warning=FALSE}
+
+# Useful info to pull data
+  #metadata <- sf::read_sf("./data/ACS_2020_5YR_COUNTY.gdb", layer = "COUNTY_METADATA_2020") 
+  #gdbLayers <- st_layers(dsn = "./data/ACS_2020_5YR_COUNTY.gdb")
+
+States <- c(39, 26, 18, 55, 17) # States FIPS I want
+
+# Subset of states
+d.Midwest <- sf::read_sf("./data/ACS_2020_5YR_COUNTY.gdb", layer = "ACS_2020_5YR_COUNTY") %>% 
+  filter(STATEFP %in% States)
+
+# Save new states file for GitHub upload
+st_write(d.Midwest,"D:/EnvAnalysisR/GEOG49073/Labs/Lab3/data/d.Midwest/d.Midwest.shp")
+
+# Save the csv of the table I want for later
+d.x8 <- sf::read_sf("./data/ACS_2020_5YR_COUNTY.gdb", layer = "x08_Commuting")
+write_csv(d.x8, "D:/EnvAnalysisR/GEOG49073/Labs/Lab3/data/x08_Commuting.csv")
+
+
+```
+
+2. Choose a variable. If it's a raw count, you should normalize the variable in an appropriate manner (e.g., by total population, percent, by area)
+```{r}
+
+# Note
+  # B08006e20 = SEX OF WORKERS BY MEANS OF TRANSPORTATION TO WORK: Car, truck, or van: Drove alone: Workers 16 years and over -- (Estimate)
+  # B08006e1 = SEX OF WORKERS BY MEANS OF TRANSPORTATION TO WORK: Total: Workers 16 years and over -- (Estimate)
+
+
+d.Midwest <- st_read("./data/d.Midwest")
+d.x8 <- read_csv("./data/x08_Commuting.csv")
+
+# Table I want - GEOID needs fixed to match counties
+d.x8 <- d.x8 %>% 
+  mutate(fixed_geoid = str_sub(GEOID, start = 8, end = -1)) 
+
+# Join data
+JoinedData <- d.Midwest %>% left_join(., d.x8, by = c("GEOID" = "fixed_geoid"))
+
+JoinedData <- JoinedData %>% 
+  select(STATEFP, COUNTYF, GEOID, NAME, TOT_POP = B08006e1, Drove_Alone = B08006e20) %>%  # Select the needed columns
+  mutate(PntPersonalCom = (Drove_Alone/TOT_POP)*100) # Make a new column of percent of people who commute alone with a personal vehicle
+
+```
+
+3. Make a histogram of your chosen variable
+```{r}
+
+hist(JoinedData$PntPersonalCom)
+
+```
+
+4. Make a choropleth map of your chosen variable. Choose an appropriate data classiﬁcation scheme
+```{r}
+
+ggplot(JoinedData) +
+  geom_sf(aes(fill = PntPersonalCom)) +
+  scale_fill_viridis_b() +
+  theme_minimal() +
+  labs(title = "Percent of Workers Commuting with Personal Vehicles",
+       fill = "Percent of Total Workers")
+
+```
+
+5. Develop a contiguity-based spatial weights matrix of your choosing (i.e., rook or queen)
+
+    5.1. Row-standardize the W
+```{r}
+
+# Re-project to north american equidistant conic
+JoinedData.projected <- JoinedData %>% sf::st_transform(., "ESRI:102010")
+
+# make the neighborhood
+nb <- spdep::poly2nb(JoinedData.projected, queen = TRUE)
+
+# Assign weights using style W
+lw <- nb2listw(nb, style="W", zero.policy=TRUE)
+
+```
+    
+    5.2. Plot a histogram of the number of neighbors
+```{r}
+
+# Find the count of neighbors in the dataset
+neighbors <- attr(lw$weights,"comp")$d 
+
+# Plot it
+hist(neighbors)
+
+
+```
+  
+    5.3. Calculate the average number of neighbors
+```{r}
+
+mean(neighbors)
+
+```
+  
+    5.4. Make a Moran Plot
+```{r}
+
+moran.plot(JoinedData.projected$PntPersonalCom, lw, zero.policy=TRUE, plot=TRUE)
+
+
+```
+
+
+6. Repeat #5 (and 5.1 - 5.4) above with a W developed using the IDW method. You will need to investigate the `spdep` documentation to find the correct method/function.
+```{r}
+
+# Make sure polygons are in right projection
+JoinedData.projected <- JoinedData %>% sf::st_transform(., "ESRI:102010")
+
+# Get the centroid of the counties - get the coords - & turn it into a DF
+coords <- data.frame(st_coordinates(st_centroid(st_geometry(JoinedData.projected)))) 
+
+# Convert the coords into a sf class so that it can be used in the nb2listwdist function
+SF_coords <- st_as_sf(coords, coords = c("X", "Y"), crs = 102010) #
+
+# make the neighborhood
+nb_IDW <- spdep::poly2nb(JoinedData.projected, queen = TRUE)
+
+# Assign weights using style W and IDW
+lw_IDW <- nb2listwdist(neighbours = nb_IDW, x = SF_coords, type = 'idw', style = 'W', zero.policy=TRUE)
+
+# Find the count of neighbors in the dataset
+neighbors_IDW <- attr(lw_IDW$weights,"comp")$d 
+
+# Plot amount of neighbors
+hist(neighbors_IDW)
+
+mean(neighbors_IDW)
+
+
+moran.plot(JoinedData.projected$PntPersonalCom, lw_IDW, zero.policy=TRUE, plot=TRUE)
+
+
+```
+
+
+## Questions:
+
+1. Describe in your own words how Moran’s I is calculated
+Moran's I is calculated by comparing the values of locations near each other based on their proximity. If the values are similar then there is a positive spatial autocorrelation and it is measured between -1 and 1. The calculation also takes into account the overall average value across the dataset and the total number of locations. 
+
+
+2. Describe in your own words: what is a spatially-lagged variable?
+A spatially lagged variable measures the weighted average of surrounding neighbor's values. It is helpful in capturing spatial trends instead of relying on a single value to be representative of an area. 
+
+
+3. How does your analysis in this lab (as simple as it is) differ by how you have formalized W (e.g., space, neighbors) in two diﬀerent methods? How might it affect analysis?
+In the first method, the neighbors were defined as any that were touching the polygon. Then, these neighbors all had equal weight/importance. In the IDW method the neighbors were defined the same, but the closer the coordinates of the centroid were the more weight and importance the neighbor had. This method more closely follows the rule that objects that are closer together have more influence than those farther apart. 
+
+
+4. What does it mean if an observation falls in the “H-L” quadrant? Why might it be useful to detect such occurances?
+An observation in the H-L quadrant has a high value and is surrounded by lower values. Detecting these occurrences could be very helpful in decision-making. For example, if a high-crime area is surrounded by low-crime areas there may be important contributing factors to look at in the H-L observation.
+
+
+
+
+
+
+## Bonus (+30 points)
+
+B1. make another Moran plot, this time do so manually (use `geom_point` from `ggplot`). You must label each quadrant with HH, HL, LL, and LH, respectively. You should also use color and/or shape to denote whether an observation is statistically significant. Tip, you can find the data you want using the ```moran.plot``` function, but you'll have to alter the function call and read some documentation.
+
+B2. plot a choropleth map of your dataset with a categorical color scheme, where the shading corresponds to the Moran plot (really, “LISA”) quadrants. Thus, your map will have four shades of color.

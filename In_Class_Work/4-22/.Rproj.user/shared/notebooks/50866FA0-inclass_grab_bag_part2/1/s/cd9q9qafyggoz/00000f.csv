@@ -1,0 +1,4 @@
+"0","# Mean patch size"
+"0",""
+"0","## Landscape level"
+"0","landscapemetrics::lsm_l_area_mn(lulc.portage, directions = 8)"

@@ -1,0 +1,25 @@
+"0","Map_Group2 <- leaflet() %>% 
+  addTiles() %>% 
+  addCircleMarkers(
+    data = MS, 
+    radius = ~log(Drainage_A), 
+    fill = TRUE, 
+    color = ""blue"", 
+    fillColor = ""blue"",
+    group = 'Monitoring Stations') %>% 
+  addAwesomeMarkers(
+    data = dams_removed, 
+    icon = ""flag"",
+    group = 'Removed Dams') %>% 
+  addProviderTiles(
+    ""Esri.WorldStreetMap"",
+    group = ""Esri.WorldStreetMap"") %>%
+  addProviderTiles(
+    ""Esri.WorldImagery"",
+    group = ""Esri.WorldImagery"") %>%
+  addLayersControl(
+    overlayGroups = c(""Monitoring Stations"", ""Removed Dams""),
+    baseGroups = c('Esri.WorldStreetMap', 'Esdri.WorldImagery'))
+"
+"2","Error in icon$library : $ operator is invalid for atomic vectors
+"

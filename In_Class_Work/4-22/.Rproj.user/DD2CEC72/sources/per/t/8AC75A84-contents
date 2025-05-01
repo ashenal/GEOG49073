@@ -1,0 +1,592 @@
+---
+title: "Grab-bag part 2"
+output:
+  html_document:
+    df_print: paged
+  pdf_document: default
+---
+
+# Today's plan
+1. Spatial sampling
+2. Landscape metrics
+3. Some basic statistics
+
+# Any questions?
+
+# Activities
+
+## Setup
+
+Load some packages
+
+```{r}
+library(tidyverse)
+library(terra)
+library(tidyterra)
+library(sf)
+library(mapview)
+library(landscapemetrics) # new - you'll likely need to install this package
+```
+
+
+## Raster data
+
+LULC data for NE OH
+
+```{r}
+neoh_lulc <- terra::rast("./data/ohio/neoh_nlcd.tif")
+
+# summary
+terra::summary(neoh_lulc)
+
+```
+
+## Vector data
+
+
+```{r}
+# using terra vector classes to make later operations easier
+# project to the crs of the raster so we don't need to resample raster (which takes forever)
+neoh_counties <- vect("./data/ohio/neoh_counties.gpkg") %>%
+  terra::project(., crs(neoh_lulc))
+
+oh_tracts <- vect("./oh_tracts_2020.gpkg") %>%
+  terra::project(., crs(neoh_lulc))
+
+mapview(oh_tracts)
+
+```
+
+
+Let's define a spatial subset so that our initial work is faster
+
+```{r}
+portage <- neoh_counties %>% tidyterra::filter(NAME == "Portage")
+
+summit <- neoh_counties %>% tidyterra::filter(NAME == "Summit")
+
+# just for demonstration, some spatial sampling
+port.samples <- terra::spatSample(portage, size = 40, method = "random")
+port.buffs <- terra::buffer(port.samples, width = 400)
+
+# map them together (hence the union function)
+terra::union(portage, summit) %>%
+  mapview(., label = "NAME", zcol = "NAME") +
+  mapview(port.buffs) # add the buffers on top
+
+
+```
+
+
+
+Let's clip the raster to Portage County
+
+```{r}
+lulc.portage <- neoh_lulc %>% terra::crop(., portage)
+
+
+mapview(portage) + mapview(lulc.portage)
+
+```
+
+What's the deal with the shape of the raster?
+
+
+Let's add a mask
+
+```{r}
+masked.portage <- lulc.portage %>% terra::mask(., portage)
+```
+
+Wait, what's the difference between a `crop` and a `mask`?
+
+```{r}
+dim(lulc.portage)
+
+dim(masked.portage)
+
+```
+
+Hmmm, they're the same? Let's try something else. How many NA values in each?
+
+
+```{r}
+lulc.portage %>% values() %>% as_tibble() %>% 
+  dplyr::filter(is.na(`NLCD Land Cover Class`)) %>% nrow()
+
+masked.portage %>% values() %>% as_tibble() %>% 
+  dplyr::filter(is.na(`NLCD Land Cover Class`)) %>% nrow()
+
+```
+
+So, what's the difference between a `crop` and a `mask`?
+
+What are some alternatives to using a mask?
+
+
+## Landscape metrics
+
+What's a landscape metric?
+
+### Some common metrics
+
+
+#### 1. **Patch Density (PD)**
+- **Description:** Measures the number of patches per unit area. It provides insight into the fragmentation of a landscape—more patches generally indicate more fragmentation.
+- **Interpretation:** Higher values suggest a more fragmented or heterogeneous landscape.
+
+
+#### 2. **Edge Density (ED)**
+- **Description:** Total length of all edge segments in the landscape per unit area. This metric quantifies the amount of edge habitat, which can be important for certain species.
+- **Interpretation:** A high edge density often implies a fragmented landscape with many small patches or irregular shapes.
+
+
+#### 3. **Mean Patch Size (MPS)**
+- **Description:** The average area of patches within a given class or the whole landscape. It provides a simple summary of patch area characteristics.
+- **Interpretation:** Larger mean patch sizes suggest greater habitat continuity or core area.
+
+
+#### 4. **Landscape Shape Index (LSI)**
+- **Description:** Measures the complexity of patch shapes relative to a standard shape (square or circle). It accounts for both the number and perimeter of patches.
+- **Interpretation:** Higher LSI values indicate more irregular or complex patch shapes.
+
+
+#### 5. **Shannon’s Diversity Index (SHDI)**
+- **Description:** A diversity index that accounts for both the richness and evenness of patch types in the landscape.
+- **Interpretation:** Higher SHDI values indicate greater landscape heterogeneity and compositional complexity.
+
+
+### Let's try a few
+
+#### Density metrics
+
+```{r}
+
+# Patch density
+
+## Landscape level
+landscapemetrics::lsm_l_pd(lulc.portage)
+
+## class level
+landscapemetrics::lsm_c_pd(lulc.portage)
+
+# Edge density
+
+## landscape level
+landscapemetrics::lsm_l_ed(lulc.portage)
+
+## class level
+landscapemetrics::lsm_c_ed(lulc.portage)
+
+```
+
+#### Mean patch size. 
+
+Notice anything different here?
+
+```{r}
+# Mean patch size
+
+## Landscape level
+landscapemetrics::lsm_l_area_mn(lulc.portage, directions = 8)
+
+## Class level
+landscapemetrics::lsm_c_area_mn(lulc.portage, directions = 8)
+
+```
+
+#### Indices
+
+```{r}
+
+# Shannon's
+landscapemetrics::lsm_l_shdi(lulc.portage)
+
+
+# Simpson's
+landscapemetrics::lsm_l_sidi(lulc.portage)
+
+# Landscape shape index
+landscapemetrics::lsm_l_lsi(lulc.portage)
+landscapemetrics::lsm_c_lsi(lulc.portage)
+
+
+```
+
+
+## A bit of stats
+
+*TODAY'S TASK:*
+
+Let's figure out the landscape diversity of all Census tracts in Portage County
+
+### CONCEPTUAL MODELING ON THE WHITEBOARD!!!
+
+
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.. SPOILER WARNING.....
+.
+.
+.
+.
+.
+.
+.
+.
+.
+.. SPOILER WARNING.....
+.
+.
+.
+.
+.
+.
+.
+.
+.. SPOILER WARNING.....
+.
+.
+.
+.
+.
+.
+.
+.
+.. SPOILER WARNING.....
+.
+.
+.
+.
+.
+.
+.
+.
+
+
+
+### Let's work it out
+
+```{r}
+# just those tracts
+pc.tracts <- terra::intersect(oh_tracts, portage)
+
+# map it to make sure we have what we want
+pc.tracts %>% mapview()
+
+```
+
+
+
+We can grab any given tract, crop the raster to it, and calculate a metric
+
+```{r}
+pc.tracts[1] %>% terra::crop(lulc.portage, .) %>%
+  landscapemetrics::lsm_l_shdi(.)
+```
+
+
+So let's develop a function to automate
+
+```{r}
+calc_shannon <- function(r, v){
+  
+  toReturn <- terra::crop(r, v) %>%
+    landscapemetrics::lsm_l_shdi(.)
+  
+  return(toReturn)
+}
+
+
+```
+
+
+Test it
+
+```{r}
+calc_shannon(lulc.portage, pc.tracts[1])
+```
+
+It works!
+
+But it's a hassle to manually go one-by-one. Options?
+
+.
+..
+...
+....
+.....
+......
+.......
+
+Frustratingly, terra doesn't easily allow iterating over rows (sf objects do). 
+
+WHY???!?!!?!?!?! 
+
+So we have to create a wrapper function around `calc_shannon`
+
+...AND THEN iterate over the tracts using their index.
+
+```{r}
+calc_shannon_wrapper <- function(i, r, tracts){
+  v <- tracts[i, ]
+  res <- calc_shannon(r, v)
+  res$seq_id <- i
+  return(res)
+}
+
+```
+
+So we use `map()` functions to iterate over the tracts, call the wrapper function, which then calls the other function
+
+```{r}
+portage.results <- map_dfr(1:nrow(pc.tracts), calc_shannon_wrapper, r = lulc.portage, tracts = pc.tracts)
+```
+
+
+
+### Trade-offs among packages and data types/models
+
+This is why I like sf() better - it treats spatial objects like tibbles()
+
+
+```{r}
+# Define a modified version of your function that works with one row of sf
+calc_shannon_sf <- function(r, v_geom) {
+  v_vect <- terra::vect(v_geom)  # Convert sf geometry to SpatVector - WE DO HAVE TO CONVERT TO TERRA STILL
+  toReturn <- terra::crop(r, v_vect) %>%
+    landscapemetrics::lsm_l_shdi(.)
+  return(toReturn$value)
+}
+
+# Use rowwise mutate to apply to each feature
+portage_tracts_sf <- pc.tracts %>%
+  as_sf() %>%
+  rowwise() %>%
+  mutate(shdi = calc_shannon_sf(lulc.portage, geometry)) %>%
+  ungroup()
+```
+
+
+
+Regardless of how we do it, we now have the SHDI values for each tract. 
+
+So let's plot it
+
+```{r}
+portage_tracts_sf %>%
+  ggplot(., aes(x = shdi)) +
+  geom_histogram(bins = 25) +
+  theme_minimal()
+```
+
+What can we infer from this plot? Anything?
+
+
+Let's make a comparison between two counties
+
+Reuse the function for Summit County
+
+Get the data ready first
+
+```{r}
+sc.tracts <- terra::intersect(oh_tracts, summit)
+lulc.sc <- neoh_lulc %>% terra::crop(., summit)
+
+# map it to make sure we have what we want
+mapview(lulc.sc) + mapview(sc.tracts)
+
+```
+
+Then run for Summit county
+```{r}
+summit_tracts_sf <- sc.tracts %>%
+  as_sf() %>%
+  rowwise() %>%
+  mutate(shdi = calc_shannon_sf(lulc.sc, geometry)) %>%
+  ungroup()
+```
+
+
+Then plot it too!
+
+```{r}
+summit_tracts_sf %>%
+  ggplot(., aes(x = shdi)) +
+  geom_histogram(bins = 25) +
+  theme_minimal()
+```
+
+Let's make a comparison. First, we put the data together to make it easier
+
+```{r}
+both_sf <- bind_rows(portage_tracts_sf, summit_tracts_sf)
+
+mapview(both_sf, zcol = "shdi")
+
+
+```
+
+Now let's plot the differences
+
+```{r}
+both_sf %>%
+  ggplot(., aes(x = shdi, fill = NAMELSAD.1)) +
+  geom_histogram() +
+  theme_minimal() 
+  
+```
+Hmmm, a bit hard to interpret
+
+Options?
+
+```{r}
+both_sf %>%
+  ggplot(., aes(x = shdi, fill = NAMELSAD.1)) +
+  geom_histogram() +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  facet_grid(NAMELSAD.1~.)
+```
+
+```{r}
+both_sf %>%
+  ggplot(., aes(x = shdi, fill = NAMELSAD.1)) +
+  geom_density(alpha = 0.5) +
+  theme_minimal() 
+```
+
+# Let's do some stats
+
+## One-Way ANOVA (Analysis of Variance)
+
+**One-way ANOVA** is a statistical test used to determine whether there are statistically significant differences between the means of **three or more independent (unrelated)** groups based on a single categorical factor.
+
+## Purpose
+
+To test the **null hypothesis** that the means of all groups are equal:
+
+\[
+H_0: \mu_1 = \mu_2 = \mu_3 = \dots = \mu_k
+\]
+
+Against the **alternative hypothesis** that at least one group mean is different.
+
+---
+
+## When to Use
+
+- The dependent variable is **continuous** (e.g., height, test scores, yield).
+- The independent variable is **categorical** with **three or more levels** (e.g., treatment groups, soil types).
+- Observations are **independent**.
+- The data is approximately **normally distributed** within groups.
+- Homogeneity of variances (equal variances across groups) is assumed.
+
+---
+
+## How It Works
+
+ANOVA compares the **variance between group means** to the **variance within the groups**:
+
+- **Between-group variability**: How much the group means deviate from the overall mean.
+- **Within-group variability**: How much individual observations deviate from their group mean.
+
+The test statistic is an **F-ratio**:
+
+\[
+F = \frac{\text{Mean Square Between Groups}}{\text{Mean Square Within Groups}}
+\]
+
+A larger F value indicates more variability **between groups** than **within**, suggesting group means are not all equal.
+
+---
+
+## Output
+
+Typically includes:
+
+- **F-statistic**
+- **p-value**
+- **Degrees of freedom** for between-group and within-group variation
+
+If the p-value is **less than the chosen significance level** (e.g., 0.05), reject the null hypothesis.
+
+---
+
+## Post Hoc Tests
+
+If ANOVA is significant, post hoc comparisons (e.g., Tukey's HSD) are used to determine **which groups differ**.
+
+---
+
+
+
+```{r}
+model <- aov(shdi ~ NAMELSAD.1, data = both_sf)
+
+summary(model)
+
+
+# Post hoc - not really necessary with only two groups, but useful if you have more than one
+TukeyHSD(model)
+
+```
+
+# Your tasks
+
+1. Add another county to the analysis. Run the ANOVA again
+
+2. How might we modify/extend our analysis to another statistic? Try it!
+
+```{r}
+Tracts_interest <- c('portage',
+                     'summit',
+                     'cuyahoga')
+sc.tracts <- terra::intersect(oh_tracts, summit)
+pc.tracts <- terra::intersect(oh_tracts, portage)
+
+
+
+
+Multi.tracts <- terra::intersect(oh_tracts, Tracts_interest)
+
+
+# Define a modified version of your function that works with one row of sf
+calc_shannon_sf <- function(r, v_geom) {
+  v_vect <- terra::vect(v_geom)  # Convert sf geometry to SpatVector - WE DO HAVE TO CONVERT TO TERRA STILL
+  toReturn <- terra::crop(r, v_vect) %>%
+    landscapemetrics::lsm_l_shdi(.)
+  return(toReturn$value)
+}
+
+# Use rowwise mutate to apply to each feature
+Multi_tracts_sf <- Multi.tracts %>%
+  as_sf() %>%
+  rowwise() %>%
+  mutate(shdi = calc_shannon_sf(lulc.portage, geometry)) %>%
+  ungroup()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

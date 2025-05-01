@@ -1,0 +1,3 @@
+"0","both_sf <- bind_rows(portage_tracts_sf, summit_tracts_sf)"
+"0",""
+"0","mapview(both_sf, zcol = ""shdi"")"

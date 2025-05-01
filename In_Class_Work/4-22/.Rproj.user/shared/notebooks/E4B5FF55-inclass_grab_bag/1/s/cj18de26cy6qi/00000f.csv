@@ -1,0 +1,7 @@
+"0","mapview(neoh_lulc)"
+"2","Number of pixels is above 5e+05.Only about 5e+05 pixels will be shown.
+You can increase the value of `maxpixels` to 41033300 to avoid this.
+"
+"2","Error in leafem::addStarsImage(map = m, x = x, band = band, colors = pal,  : 
+  Raster image too large; 13693085 bytes is greater than maximum 4194304 bytes
+"

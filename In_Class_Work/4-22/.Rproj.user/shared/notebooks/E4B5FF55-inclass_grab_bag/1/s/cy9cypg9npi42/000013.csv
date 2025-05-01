@@ -1,0 +1,8 @@
+"0","neoh_counties <- vect(""./data/ohio/neoh_counties.gpkg"") %>%
+  terra::project(., crs(neoh_lulc))
+
+oh_tracts <- vect(""./data/ohio/oh_tracts_2020.gpkg"") %>%
+  terra::project(., crs(neoh_lulc))
+"
+"2","Warning: In GetNextRawFeature(): sqlite3_step() : database disk image is malformed (GDAL error 1)"
+"2","Warning: In GetNextRawFeature(): sqlite3_step() : database disk image is malformed (GDAL error 1)"

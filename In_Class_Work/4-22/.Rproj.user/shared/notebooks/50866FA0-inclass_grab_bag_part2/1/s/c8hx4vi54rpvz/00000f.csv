@@ -1,0 +1,7 @@
+"0","lulc.portage <- neoh_lulc %>% terra::crop(., portage)"
+"0",""
+"0",""
+"0","mapview(portage) + mapview(lulc.portage)"
+"2","Number of pixels is above 5e+05.Only about 5e+05 pixels will be shown.
+You can increase the value of `maxpixels` to 1908054 to avoid this.
+"

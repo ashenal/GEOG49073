@@ -1,0 +1,7 @@
+"0","calc_shannon_wrapper <- function(i, r, tracts){"
+"0","  v <- tracts[i, ]"
+"0","  res <- calc_shannon(r, v)"
+"0","  res$seq_id <- i"
+"0","  return(res)"
+"0","}"
+"0",""

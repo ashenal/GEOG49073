@@ -1,0 +1,4 @@
+"0",""
+"0","z.max <- terra::zonal(neoh_lulc, neoh_counties, fun = ""max"")"
+"0",""
+"0","z.max"

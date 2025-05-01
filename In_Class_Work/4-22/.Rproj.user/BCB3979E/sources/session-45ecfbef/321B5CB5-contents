@@ -1,0 +1,437 @@
+---
+title: "In-class zonal and other stuff"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Today's plan
+
+- Zonal statistics
+- Some "tips and tricks" with respect to data manipulation
+
+
+# Packages
+
+```{r}
+library(tidyverse)
+library(terra)
+library(tidyterra)
+library(sf)
+library(mapview) # likely new to you
+
+```
+
+# Read data
+
+
+## Raster data
+
+Read NLCD for northeast ohio
+
+```{r}
+
+neoh_lulc <- terra::rast("./data/ohio/neoh_nlcd.tif")
+
+# summary
+terra::summary(neoh_lulc)
+
+
+# plot it
+terra::plot(neoh_lulc)
+
+```
+
+Mapview is a quick way to plot data as well. 
+
+```{r}
+mapview(neoh_lulc)
+```
+
+But it doesn't love giant raster data
+
+
+We COULD resample to a coarser resolution, but that is problematic.
+
+```{r}
+neoh_lulc %>% terra::aggregate(., 3, fun = "modal") %>% mapview(.)
+```
+
+What does the above code do? How would you know?
+
+
+
+## Vector data
+```{r}
+# using terra vector classes to make later operations easier
+# project to the crs of the raster so we don't need to resample raster (which takes forever)
+neoh_counties <- vect("./data/ohio/neoh_counties.gpkg") %>%
+  terra::project(., crs(neoh_lulc))
+
+oh_tracts <- vect("./data/ohio/oh_tracts_2020.gpkg") %>%
+  terra::project(., crs(neoh_lulc))
+
+mapview(neoh_counties) + mapview(oh_tracts)
+
+```
+
+
+# TODAY'S PROBLEM
+
+Let's figure out the mix of land use within EACH county
+
+
+
+# let's get some raster values
+
+Test some zonal statistics. Wait, what's a "zonal statistic"?
+```{r}
+
+test <- terra::zonal(neoh_lulc, neoh_counties)
+
+test
+```
+
+What do we get?
+
+
+```{r}
+
+z.max <- terra::zonal(neoh_lulc, neoh_counties, fun = "max")
+
+z.max
+
+```
+
+Useful? 
+
+In what context MIGHT it be useful?
+
+Maybe not with categorical data
+
+## Get values
+
+Let's try something a bit more intelligent
+```{r}
+values <- extract(neoh_lulc, neoh_counties)
+
+values
+```
+
+What do we get? And... what's with the tick marks around attribute #2?
+
+```{r}
+values %>% group_by(ID, `NLCD Land Cover Class`) %>%
+  summarise(ncells = n())
+```
+I would call the format of these data a "long data frame"... why?
+
+
+# Let's make a plan (or two):
+
+1. Programatically create a list of distinct land cover classes
+
+```{r}
+# Starting with this object
+
+unique(values$`NLCD Land Cover Class`)
+
+```
+
+
+
+2. Which ID has the greatest total area of Barren Land
+
+```{r}
+# starting with this object
+
+df.cells <- values %>% group_by(ID, `NLCD Land Cover Class`) %>%
+  summarise(ncells = n())
+
+df.cells %>% 
+  dplyr::ungroup() %>% # Why do i need to ungroup?
+  dplyr::filter(`NLCD Land Cover Class` == "Barren Land") %>%
+  dplyr::slice_max(., ncells, n = 1)
+
+```
+
+
+
+
+2. Let's find the county with the greatest fraction of forest.
+
+What problems do we have?
+
+Let's break down the problems/tasks into (at least) 3 steps:
+
+1.
+
+2.
+
+3.
+
+
+
+
+Don't keep scrolling...
+
+
+
+
+
+
+
+There are spoilers ahead....
+
+
+
+
+
+
+
+
+
+
+
+
+No, really, we're going to do this all together....
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Why are you still scrolling?
+
+
+
+
+
+
+
+
+
+I didn't say it was ok just yet...
+
+
+
+
+
+
+
+
+# Spoilers
+
+
+
+
+
+
+
+
+All within a series of groups and summarise functions
+```{r}
+df.forfract <- df.cells %>% 
+  group_by(ID) %>%
+  mutate(tot_cells = sum(ncells)) %>%
+  dplyr::filter(., str_detect(`NLCD Land Cover Class`, "Forest")) %>%
+  group_by(ID) %>%
+  summarise(forest_cells = sum(ncells),
+            tot_cells = max(tot_cells)) %>%
+  mutate(frac_forest = forest_cells/tot_cells)
+
+df.forfract
+
+```
+
+
+Make the data "wide"
+```{r}
+# make the data "wide"
+
+
+df.cells.w <- df.cells %>% pivot_wider(id_cols = ID, 
+                                       names_from = `NLCD Land Cover Class`,
+                                       values_from = ncells)
+
+df.cells.w.calc <- df.cells.w %>%
+  mutate(., ) # <- what might go in here???
+
+
+df.cells.w.calc
+
+
+```
+
+
+
+```{r}
+# get the vector data setup
+
+neoh_counties.fix <- neoh_counties %>% 
+  as_sf(.) %>% # don't need terra::vect anymore, so let's stop using it
+  tidyterra::mutate(., simpleid = seq(1:nrow(.)))
+  
+neoh_counties.fix
+```
+
+
+
+```{r}
+# put it together
+
+d.joined <- neoh_counties.fix %>% left_join(., df.cells.w, by = c("simpleid" = "ID"))
+
+
+# So, we could use a mutate() and calculate the fraction of forest here. 
+# Or we could reuse the data we made above
+
+
+d.joined.for <- d.joined %>% left_join(df.forfract, by = c("simpleid" = "ID"))
+
+d.joined.for
+
+```
+
+
+
+
+
+## Map it
+
+```{r}
+d.joined.for %>% mapview::mapView(zcol = "frac_forest")
+```
+
+## Can map other stuff too
+
+```{r}
+mapView(terra::aggregate(neoh_lulc, 3, fun = "modal")) + mapView(d.joined.for, zcol = "frac_forest")
+```
+
+...usually. This raster is too large. Not every package is equivalent
+
+
+## Back to the "long" format
+
+- Wait, why might we want the data to be "long" again?
+
+
+Let's make the data longer. But let's also break down the code
+```{r}
+d.long <- d.joined.for %>%
+  st_drop_geometry() %>%
+  dplyr::select(-(LSAD:simpleid)) %>%
+  pivot_longer(., cols = Unclassified:frac_forest, names_to = "lulc", values_to = "value")
+
+d.long
+  
+```
+
+
+And we can try some plotting. Why are "long" data useful in this case?
+
+```{r}
+
+d.long %>% 
+  ggplot(., aes(x = lulc, y = value)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Land use type", y = "number of cells")
+  
+
+
+
+```
+Not quite right, is it?
+
+
+Let's try to fix some problems. Break it down again!
+
+```{r}
+d.long %>% 
+  dplyr::filter(., !lulc %in% c("forest_cells", "tot_cells")) %>%
+  ggplot(., aes(x = lulc, y = value, fill = NAME)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Land use type", y = "number of cells")
+```
+Maybe a bit better, but we still have some problems....
+
+```{r}
+
+cell.area <- terra::res(neoh_lulc)[1] * terra::res(neoh_lulc)[2]
+
+
+d.long %>% 
+  dplyr::filter(., !lulc %in% c("forest_cells", "tot_cells")) %>%
+  ggplot(., aes(x = lulc, y = value * cell.area, fill = NAME)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Land use type", y = "Area (sq. meters)") +
+  facet_wrap(~NAME) +
+  #facet_grid(.~NAME) + # a messier alternative
+  theme(legend.position = "none")
+```
+
+
+If you wanted to save this
+
+```{r}
+myplot <- d.long %>% 
+  dplyr::filter(., !lulc %in% c("forest_cells", "tot_cells")) %>%
+  ggplot(., aes(x = lulc, y = value * cell.area, fill = NAME)) +
+  geom_col() +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(x = "Land use type", y = "Area (sq. meters)") +
+  facet_wrap(~NAME) +
+  #facet_grid(.~NAME) + # a messier alternative
+  theme(legend.position = "none")
+
+
+ggsave("../plots/lulc_areas.png", dpi = 300, width = 7.5, height = 6, units = "in")
+
+
+```
+
+
+What might we need to do to fix the issues?
+
+
+Some examples
+
+```{r}
+d.long %>% 
+  dplyr::filter(., !lulc %in% c("forest_cells", "tot_cells")) %>%
+  ggplot(., aes(x = lulc, y = (value * cell.area) / 1e6, fill = NAME)) +
+  geom_col() +
+  theme_minimal() +
+  labs(x = "Land use type", y = "Area (sq. km)") +
+  facet_wrap(~NAME) +
+  coord_flip() +
+  theme(legend.position = "none")
+```
+
+
+# Your tasks (if there's time)
+
+
+Individually or paired and using the techniques above,
+
+- Plot AND map the distribution of % urbanized land by census tract in study area
+

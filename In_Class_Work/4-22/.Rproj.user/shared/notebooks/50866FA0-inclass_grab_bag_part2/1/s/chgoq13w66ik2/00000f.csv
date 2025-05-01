@@ -1,0 +1,2 @@
+"0","pc.tracts[1] %>% terra::crop(lulc.portage, .) %>%"
+"0","  landscapemetrics::lsm_l_shdi(.)"
