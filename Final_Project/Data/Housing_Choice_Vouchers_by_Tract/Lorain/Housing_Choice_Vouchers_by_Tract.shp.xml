@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xml:lang="en">
+	<Esri>
+		<CreaDate>20250206</CreaDate>
+		<CreaTime>21540400</CreaTime>
+		<ArcGISFormat>1.0</ArcGISFormat>
+		<SyncOnce>FALSE</SyncOnce>
+		<DataProperties>
+			<itemProps>
+				<itemName Sync="TRUE">HOUSING_CHOICE_VOUCHERS_BY_TRACT</itemName>
+				<nativeExtBox>
+					<westBL Sync="TRUE">-19942590.539700</westBL>
+					<eastBL Sync="TRUE">20012847.421900</eastBL>
+					<southBL Sync="TRUE">2023662.703100</southBL>
+					<northBL Sync="TRUE">11537127.333500</northBL>
+					<exTypeCode Sync="TRUE">1</exTypeCode>
+				</nativeExtBox>
+				<imsContentType Sync="TRUE">002</imsContentType></itemProps>
+			<coordRef>
+				<type Sync="TRUE">Projected</type>
+				<geogcsn Sync="TRUE">GCS_WGS_1984</geogcsn>
+				<csUnits Sync="TRUE">Linear Unit: Meter (1.000000)</csUnits>
+				<projcsn Sync="TRUE">WGS_1984_Web_Mercator_Auxiliary_Sphere</projcsn>
+				<peXml Sync="TRUE">&lt;ProjectedCoordinateSystem xsi:type='typens:ProjectedCoordinateSystem' xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xs='http://www.w3.org/2001/XMLSchema' xmlns:typens='http://www.esri.com/schemas/ArcGIS/2.9.0'&gt;&lt;WKT&gt;PROJCS[&amp;quot;WGS_1984_Web_Mercator_Auxiliary_Sphere&amp;quot;,GEOGCS[&amp;quot;GCS_WGS_1984&amp;quot;,DATUM[&amp;quot;D_WGS_1984&amp;quot;,SPHEROID[&amp;quot;WGS_1984&amp;quot;,6378137.0,298.257223563]],PRIMEM[&amp;quot;Greenwich&amp;quot;,0.0],UNIT[&amp;quot;Degree&amp;quot;,0.0174532925199433]],PROJECTION[&amp;quot;Mercator_Auxiliary_Sphere&amp;quot;],PARAMETER[&amp;quot;False_Easting&amp;quot;,0.0],PARAMETER[&amp;quot;False_Northing&amp;quot;,0.0],PARAMETER[&amp;quot;Central_Meridian&amp;quot;,0.0],PARAMETER[&amp;quot;Standard_Parallel_1&amp;quot;,0.0],PARAMETER[&amp;quot;Auxiliary_Sphere_Type&amp;quot;,0.0],UNIT[&amp;quot;Meter&amp;quot;,1.0],AUTHORITY[&amp;quot;EPSG&amp;quot;,3857]]&lt;/WKT&gt;&lt;XOrigin&gt;-20037700&lt;/XOrigin&gt;&lt;YOrigin&gt;-30241100&lt;/YOrigin&gt;&lt;XYScale&gt;10000&lt;/XYScale&gt;&lt;ZOrigin&gt;0&lt;/ZOrigin&gt;&lt;ZScale&gt;1&lt;/ZScale&gt;&lt;MOrigin&gt;0&lt;/MOrigin&gt;&lt;MScale&gt;1&lt;/MScale&gt;&lt;XYTolerance&gt;0.001&lt;/XYTolerance&gt;&lt;ZTolerance&gt;0.001&lt;/ZTolerance&gt;&lt;MTolerance&gt;0.001&lt;/MTolerance&gt;&lt;HighPrecision&gt;true&lt;/HighPrecision&gt;&lt;WKID&gt;102100&lt;/WKID&gt;&lt;LatestWKID&gt;3857&lt;/LatestWKID&gt;&lt;/ProjectedCoordinateSystem&gt;</peXml>
+			</coordRef>
+		</DataProperties>
+		<SyncDate>20240503</SyncDate>
+		<SyncTime>14135600</SyncTime>
+		<ModDate>20240503</ModDate>
+		<ModTime>14135600</ModTime>
+	</Esri>
+	<mdChar>
+		<CharSetCd value="004"/>
+	</mdChar>
+	<mdHrLv>
+		<ScopeCd value="005"/>
+	</mdHrLv>
+	<mdContact>
+		<rpIndName>HUD eGIS Team</rpIndName>
+		<rpOrgName>U.S. Department of Housing and Urban Development</rpOrgName>
+		<rpCntInfo>
+			<cntPhone>
+				<voiceNum>502-618-8121</voiceNum>
+			</cntPhone>
+			<cntAddress addressType="postal">
+				<delPoint>451 7th Street SW rm. 8126</delPoint>
+				<city>Washington</city>
+				<adminArea>D.C.</adminArea>
+				<postCode>20410-0001</postCode>
+				<country>US</country>
+				<eMailAdd>GIShelpdesk@hud.gov</eMailAdd>
+			</cntAddress>
+		</rpCntInfo>
+		<role>
+			<RoleCd value="007"/>
+		</role>
+	</mdContact>
+	<mdDateSt>20240304</mdDateSt>
+	<mdStanName>ArcGIS Metadata</mdStanName>
+	<mdStanVer>1.0</mdStanVer>
+	<dataIdInfo>
+		<idCitation>
+			<resTitle>Housing Choice Vouchers by Tract</resTitle>
+			<date>
+				<pubDate>2024-03-04</pubDate>
+			</date>
+			<presForm>
+				<PresFormCd value="005"/>
+			</presForm>
+			<presForm>
+				<fgdcGeoform>vector digital data</fgdcGeoform>
+			</presForm>
+		</idCitation>
+		<idAbs>The U.S. Department of Housing and Urban Development’s (HUD) Housing Choice Voucher (HCV) Program assists very low-income families, the elderly, and the disabled in obtaining decent, safe, and sanitary housing in the private market.
+
+Public Housing Authorities (PHAs) receive federal funds from HUD to administer the voucher program, and housing subsidies are paid to the landlord directly by the PHA on behalf of the participating family. The voucher recipient remains responsible for paying any difference that exists between the actual rent charged by the landlord and the amount subsidized by the program.
+
+Voucher recipients are responsible for finding a suitable housing unit where the owner agrees to rent under the program. Because housing assistance is provided on behalf of the family or individual, participants are free to choose their own housing, including single-family homes, townhouses, and apartments provided that the chosen housing meets the requirements of the program, and is not limited to units located in subsidized housing projects. Qualified housing may also include the family's present residence. Furthermore, under certain circumstances, and if authorized by the PHA, a family may use its voucher to purchase a modest home.  Please note that to restrict access to tenant information HCV locations are identified in public records by the owner, and not the tenant. Public data pertaining to the locations of HCV program participants are only available as U.S. Census Tract aggregations. Moreover, to protect the confidentiality of those receiving Housing Choice Voucher Program assistance, tracts containing 10 or fewer voucher holders have been omitted from this service. This dataset includes both tenant-based vouchers and project-based vouchers. HCV_PUBLIC_PCT are calculated using 2020 Census Demographic and Housing Characteristics File (DHC) table H4 Tenure Renter Occupied field. To learn more about the Housing Choice Voucher Program visit: https://www.hud.gov/program_offices/public_indian_housing/programs/hcv/about/ Data Dictionary: DD_Housing Choice Vouchers by Tract Date of Coverage: Up to 09/2023Last Updated: 11/2023</idAbs>
+		<idPurp>This service provides spatial data and information for Housing Choice Voucher (HCV) recipients aggregated to 2020 U.S. Census Tract geography. The HCV Program assists very low-income families, the elderly, and the disabled in obtaining decent, safe, and sanitary housing in the private market. Public Housing Authorities (PHAs) receive federal funds from HUD to administer the voucher program, and housing subsidies are paid to the landlord directly by the PHA on behalf of the participating family. The voucher recipient remains responsible for paying any difference that exists between the actual rent charged by the landlord and the amount subsidized by the program. Voucher recipients are responsible for finding a suitable housing unit where the owner agrees to rent under the program.</idPurp>
+		<idCredit>U.S. Department of Housing and Urban Development,
+U.S. Census Bureau
+</idCredit>
+		<idStatus>
+			<ProgCd value="007"/>
+		</idStatus>
+		<idPoC>
+			<rpIndName>HUD eGIS Team</rpIndName>
+			<rpOrgName>U.S. Department of Housing and Urban Development</rpOrgName>
+			<rpCntInfo>
+				<cntPhone>
+					<voiceNum>502-618-8121</voiceNum>
+				</cntPhone>
+				<cntAddress addressType="postal">
+					<delPoint>451 7th Street SW rm. 8126</delPoint>
+					<city>Washington</city>
+					<adminArea>D.C.</adminArea>
+					<postCode>20410-0001</postCode>
+					<country>US</country>
+					<eMailAdd>GIShelpdesk@hud.gov</eMailAdd>
+				</cntAddress>
+			</rpCntInfo>
+			<role>
+				<RoleCd value="007"/>
+			</role>
+		</idPoC>
+		<resMaint>
+			<maintFreq>
+				<MaintFreqCd value="006"/>
+			</maintFreq>
+		</resMaint>
+		<graphOver>
+			<bgFileName>https://hud.maps.arcgis.com/sharing/rest/content/items/8d45c34f7f64433586ef6a448d00ca12/info/thumbnail/thumbnail.png?</bgFileName>
+			<bgFileDesc>Marginal and subscript text featuring image of geographic feature content. Department of Housing and Urban Development and eGIS logo in bottom right.</bgFileDesc>
+			<bgFileType>PNG</bgFileType>
+		</graphOver>
+		<placeKeys>
+			<keyword>UNITED STATES OF AMERICA</keyword>
+			<thesaName>
+				<resTitle>ISO 3166 — Codes for the representation of names of countries and their subdivisions</resTitle>
+			</thesaName>
+		</placeKeys>
+		<themeKeys>
+			<keyword>U.S. Department of Housing and Urban Development</keyword>
+			<keyword>HUD</keyword>
+			<keyword>Public and Indian Housing</keyword>
+			<keyword>PIH</keyword>
+			<keyword>Housing Choice Voucher Program</keyword>
+			<keyword>HCV</keyword>
+			<keyword>Rental Assistance Programs</keyword>
+			<keyword>HUD.Official.Content</keyword>
+			<keyword>NGDA</keyword>
+		</themeKeys>
+		<themeKeys>
+			<keyword>Boundaries</keyword>
+			<keyword>Economy</keyword>
+			<keyword>Location</keyword>
+			<keyword>Society</keyword>
+			<thesaName>
+				<resTitle>ISO 19115 Topic Category</resTitle>
+			</thesaName>
+		</themeKeys>
+		<themeKeys>
+			<keyword>NGDA</keyword>
+			<keyword>National Geospatial Data Asset</keyword>
+			<keyword>NGDAID121</keyword>
+			<keyword>Real Property</keyword>
+			<thesaName>
+				<resTitle>NGDA Portfolio Themes</resTitle>
+			</thesaName>
+		</themeKeys>
+		<searchKeys>
+			<keyword>U.S. Department of Housing and Urban Development</keyword>
+			<keyword>HUD</keyword>
+			<keyword>Public and Indian Housing</keyword>
+			<keyword>PIH</keyword>
+			<keyword>Housing Choice Voucher Program</keyword>
+			<keyword>HCV</keyword>
+			<keyword>Rental Assistance Programs</keyword>
+			<keyword>HUD.Official.Content</keyword>
+			<keyword>NGDA</keyword>
+			<keyword>Boundaries</keyword>
+			<keyword>Economy</keyword>
+			<keyword>Location</keyword>
+			<keyword>Society</keyword>
+			<keyword>NGDA</keyword>
+			<keyword>National Geospatial Data Asset</keyword>
+			<keyword>NGDAID121</keyword>
+			<keyword>Real Property</keyword>
+			<keyword>UNITED STATES OF AMERICA</keyword>
+		</searchKeys>
+		<resConst>
+			<Consts><useLimit>HUD and the dataset and metadata authors assume no responsibility for the use or misuse of the dataset. No warranty, expressed or implied is made with regard to the accuracy of the spatial accuracy, and no liability is assumed by the U.S. Government in general, the dataset creators or the U.S. Department of Housing and Urban Development specifically, as to the spatial or attribute accuracy of the data.</useLimit>
+			</Consts>
+		</resConst>
+		<resConst>
+			<LegConsts>
+				<accessConsts>
+					<RestrictCd value="008"/>
+				</accessConsts>
+				<othConsts>Other Constraints</othConsts>
+			</LegConsts>
+		</resConst>
+		<resConst>
+			<SecConsts>
+				<class>
+					<ClasscationCd value="001"/>
+				</class>
+				<classSys>United States Federal Classification System</classSys>
+				<handDesc>At will.</handDesc>
+			</SecConsts>
+		</resConst>
+		<spatRpType>
+			<SpatRepTypCd value="001"/>
+		</spatRpType>
+		<tpCat>
+			<TopicCatCd value="003"/>
+		</tpCat>
+		<tpCat>
+			<TopicCatCd value="005"/>
+		</tpCat>
+		<tpCat>
+			<TopicCatCd value="013"/>
+		</tpCat>
+		<tpCat>
+			<TopicCatCd value="016"/>
+		</tpCat>
+		<envirDesc>Esri ArcGIS 12.9.3.32739</envirDesc>
+		<dataExt>
+			<geoEle>
+				<GeoBndBox>
+					<exTypeCode>true</exTypeCode>
+					<westBL>-179.147339</westBL>
+					<eastBL>179.778467</eastBL>
+					<northBL>71.390482</northBL>
+					<southBL>17.881327</southBL>
+				</GeoBndBox>
+			</geoEle>
+		</dataExt>
+		<dataLang><languageCode value="eng" Sync="TRUE"/><countryCode value="USA" Sync="TRUE"/></dataLang><dataExt><geoEle><GeoBndBox esriExtentType="search"><exTypeCode Sync="TRUE">1</exTypeCode><westBL Sync="TRUE">-179.147339</westBL><eastBL Sync="TRUE">179.778467</eastBL><northBL Sync="TRUE">71.390482</northBL><southBL Sync="TRUE">17.881327</southBL></GeoBndBox></geoEle></dataExt></dataIdInfo>
+	<mdConst>
+		<SecConsts>
+			<class>
+				<ClasscationCd value="001"/>
+			</class>
+			<classSys>United States Federal Classification System</classSys>
+			<handDesc>At will.</handDesc>
+		</SecConsts>
+	</mdConst>
+	<spatRepInfo>
+		<VectSpatRep><geometObjs Name="HOUSING_CHOICE_VOUCHERS_BY_TRACT"><geoObjTyp><GeoObjTypCd value="002" Sync="TRUE"/></geoObjTyp><geoObjCnt Sync="TRUE">85154</geoObjCnt></geometObjs><topLvl><TopoLevCd value="001" Sync="TRUE"/></topLvl></VectSpatRep></spatRepInfo>
+	<eainfo>
+		<detailed Name="HOUSING_CHOICE_VOUCHERS_BY_TRACT">
+			<enttyp>
+				<enttypl>Housing Choice Vouchers by Tract</enttypl>
+				<enttypd>This service provides spatial data, and information for Housing Choice Voucher (HCV) recipients aggregated to 2010 U.S. Census Tract geography.</enttypd>
+				<enttypds>U.S. Department of Housing and Urban Development</enttypds>
+				<enttypt Sync="TRUE">Feature Class</enttypt><enttypc Sync="TRUE">85154</enttypc></enttyp>
+			<attr>
+				<attrlabl>OBJECTID</attrlabl>
+				<attrdef>In ArcGIS, a system-managed value that uniquely identifies a record or feature.</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attrdomv>
+					<udom>Sequential unique whole numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">OBJECTID</attalias><attrtype Sync="TRUE">OID</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>GEOID</attrlabl>
+				<attrdef>Geographic Identifier - fully concatenated 11-digit geographic code (State FIPS Code and County FIPS Code and Tract-level Code)</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">GEOID</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">11</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>STATE</attrlabl>
+				<attrdef>State FIPS Code</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">STATE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">2</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>COUNTY</attrlabl>
+				<attrdef>County FIPS Code</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">COUNTY</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>TRACT</attrlabl>
+				<attrdef>Census Tract FIPS Code</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">TRACT</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">6</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>EACODE</attrlabl>
+				<attrdef>Bureau of Economic Analysis Region Code</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">EACODE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">3</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>EANAME</attrlabl>
+				<attrdef>Bureau of Economic Analysis Region Name</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">EANAME</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">53</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>HCV_PUBLIC</attrlabl>
+				<attrdef>Public HCV Count</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">HCV_PUBLIC</attalias><attrtype Sync="TRUE">Integer</attrtype><attwidth Sync="TRUE">4</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>HCV_PUBLIC_PCT</attrlabl>
+				<attrdef>HCV as a Percent of Renter Occupied Housing Units</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attalias Sync="TRUE">HCV_PUBLIC_PCT</attalias><attrtype Sync="TRUE">Double</attrtype><attwidth Sync="TRUE">8</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SHAPE</attrlabl>
+				<attrdef>The characteristic appearance or visible form of a geographic object as represented on a map</attrdef>
+				<attrdefs>HUD Authors</attrdefs>
+				<attrdomv>
+					<udom>Coordinates defining the features.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">SHAPE</attalias><attrtype Sync="TRUE">Geometry</attrtype><attwidth Sync="TRUE">0</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SHAPE_Length</attrlabl>
+				<attrdef>Length of feature in internal units.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Positive real numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">SHAPE_Length</attalias><attrtype Sync="TRUE">Double</attrtype><attwidth Sync="TRUE">8</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+			<attr>
+				<attrlabl>SHAPE_Area</attrlabl>
+				<attrdef>Area of feature in internal units squared.</attrdef>
+				<attrdefs>Esri</attrdefs>
+				<attrdomv>
+					<udom>Positive real numbers that are automatically generated.</udom>
+				</attrdomv>
+				<attalias Sync="TRUE">SHAPE_Area</attalias><attrtype Sync="TRUE">Double</attrtype><attwidth Sync="TRUE">8</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale></attr>
+		</detailed>
+	</eainfo>
+	<mdLang><languageCode value="eng" Sync="TRUE"/><countryCode value="USA" Sync="TRUE"/></mdLang><distInfo><distFormat><formatName Sync="TRUE">File Geodatabase Feature Class</formatName></distFormat></distInfo><mdHrLvName Sync="TRUE">dataset</mdHrLvName><refSysInfo><RefSystem><refSysID><identCode code="3857" Sync="TRUE"/><idCodeSpace Sync="TRUE">EPSG</idCodeSpace><idVersion Sync="TRUE">6.18.3(9.3.1.2)</idVersion></refSysID></RefSystem></refSysInfo><spdoinfo><ptvctinf><esriterm Name="HOUSING_CHOICE_VOUCHERS_BY_TRACT"><efeatyp Sync="TRUE">Simple</efeatyp><efeageom code="4" Sync="TRUE"/><esritopo Sync="TRUE">FALSE</esritopo><efeacnt Sync="TRUE">85154</efeacnt><spindex Sync="TRUE">TRUE</spindex><linrefer Sync="TRUE">FALSE</linrefer></esriterm></ptvctinf></spdoinfo></metadata>
